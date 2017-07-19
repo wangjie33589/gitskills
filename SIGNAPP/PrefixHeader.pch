@@ -1,0 +1,61 @@
+//
+//  PrefixHeader.pch
+//  科远签到
+//
+//  Created by sciyonSoft on 16/5/14.
+//  Copyright © 2016年 lf. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import "SVProgressHUD.h"
+#import "AppDelegate.h"
+#import "MyRequest.h"
+
+//http://221.226.212.74:9090/CheckIn/CheckProxy.aspx
+#define  HTTPIP @"http://221.226.212.74:9090"
+#define APP_WINOW [[[UIApplication sharedApplication]delegate]window]
+#define LHIGHT [UIScreen mainScreen].bounds.size.height
+#define LWIDTH [UIScreen mainScreen].bounds.size.width
+//#define  HTTPIP [[NSUserDefaults standardUserDefaults] objectForKey:@"ip"]
+
+#define P_NO [[NSUserDefaults standardUserDefaults] objectForKey:@"PNO"]
+#define BDATE [[NSUserDefaults standardUserDefaults] objectForKey:@"BDATE"]
+#define LAT [[NSUserDefaults standardUserDefaults] objectForKey:@"LAT"]
+#define LNG [[NSUserDefaults standardUserDefaults] objectForKey:@"LNG"]
+
+//
+#define _btimetext [[NSUserDefaults standardUserDefaults]objectForKey:@"BeginTime"]
+#define _etimetext [[NSUserDefaults standardUserDefaults]objectForKey:@"EndTime"]
+#define _phonetext [[NSUserDefaults standardUserDefaults]objectForKey:@"phoneudid"]
+#define _lattext [[NSUserDefaults standardUserDefaults]objectForKey:@"lat"]
+#define _lngtext [[NSUserDefaults standardUserDefaults]objectForKey:@"lng"]
+#define _pnotext [[NSUserDefaults standardUserDefaults]objectForKey:@"pnonumber"]
+#import "XMLDictionary.h"
+
+
+
+#define SIGN_URL @"/CheckIn/CheckProxy.aspx"
+
+#define LOGIN_URL @"/SciyonCloud"
+#define SERVER_URL @"/MobileAPI/Proxy.aspx"
+#define UPLOAD_URL @"/MobileAPI/UploadFile.ashx"
+#define MAP_URL @"/MobileAPI/DeviceLocation/RealMonitor.aspx"
+#define ANLISE_URL @"/SciyonCharts/Config/DisplayPage.aspx"
+#define USER_DEFAULTS [NSUserDefaults standardUserDefaults]
+#define PHONRTEXT [[NSUserDefaults standardUserDefaults] objectForKey:@"Code"]
+#define YZM [[NSUserDefaults standardUserDefaults] objectForKey:@"YZM"]
+#define ERROR [[NSUserDefaults standardUserDefaults] objectForKey:@"ERROR"]
+
+
+#define XML_STR [[NSUserDefaults standardUserDefaults] objectForKey:@"XML"]
+#define GUID [[NSUserDefaults standardUserDefaults] objectForKey:@"GUID"]
+#define UP_DATESTAMP [[NSUserDefaults standardUserDefaults] objectForKey:@"UPDATESTAMP"]
+#define SRVER_FILE_LOGINCARTION @"../../../UserUploadFiles/"
+
+#define FILE_M [NSFileManager defaultManager]
+
+#define FLAG  @"[CONNECT]"
+
+#endif /* PrefixHeader_pch */
