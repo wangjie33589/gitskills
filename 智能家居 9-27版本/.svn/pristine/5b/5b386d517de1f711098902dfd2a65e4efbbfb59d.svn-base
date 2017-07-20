@@ -1,0 +1,876 @@
+//
+//  HomeViewController.m
+//  SyncSmartHome
+//
+//  Created by SciyonSoft_WangJie on 16/5/3.
+//  Copyright © 2016年 sciyonSoft. All rights reserved.
+//
+
+#import "HomeViewController.h"
+#import "CollectionViewCell.h"
+#import "HomeViewCell.h"
+#import "UIImageView+WebCache.h"
+#import "Area_Detil_ViewController.h"
+#import "ChangeVC.h"
+#import "KYSettingViewController.h"
+#import "MyHeaderView.h"
+#import "MyFooterView.h"
+#import "Weather_data.h"
+#import <CoreLocation/CoreLocation.h>
+#import "NSArray+info.h"
+#import "UIImageView+AFNetworking.h"
+#import "Waether.h"
+#import "SVProgressHUD.h"
+#import "Index.h"
+#import "WCell.h"
+#import "ZCell.h"
+#import "Masonry.h"
+#import "AsyncSocket.h"
+#define MAS_SHORTHAND
+#define MAS_SHORTHAND_GLOBALS
+
+#define SHORTCUTID [[NSUserDefaults standardUserDefaults]objectForKey:@"shortcutid"]
+#define SHORTCUTTYPE [[NSUserDefaults standardUserDefaults]objectForKey:@"shortcuttype"]
+@interface HomeViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UIGestureRecognizerDelegate,CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate,AsyncSocketDelegate>{
+    UICollectionView *collectView;
+    NSMutableArray *areaArray;
+    NSMutableArray *deviceArray;
+    NSMutableArray *_showArray;
+    UILongPressGestureRecognizer * longPressGr;
+    UIView *_eidtView;
+    UIView * Comments;
+    
+    NSMutableArray *_SenceArray;
+    NSString *socketStatus;//判断socket状态
+}
+@property (nonatomic, strong) UISwipeGestureRecognizer *rightSwipeGestureRecognizer;
+@property (strong, nonatomic) IBOutlet UILabel *city;
+@property (strong, nonatomic) IBOutlet UILabel *time;
+@property (strong, nonatomic) IBOutlet UILabel *weather;
+@property (strong, nonatomic) IBOutlet UILabel *pm;
+@property (strong, nonatomic) IBOutlet UILabel *sheshi;
+@property (strong, nonatomic) IBOutlet UIImageView *weatherImage;
+
+@property (nullable, strong) CLLocationManager *mgr;
+@property (nonatomic, strong) CLLocation *location;
+@property (nonatomic, strong) NSString *cityLoca;
+@property (weak, nonatomic) IBOutlet UITextField *text;
+@property (weak, nonatomic) IBOutlet UIButton *search;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) NSArray *placemarks;
+@property (strong, nonatomic) Waether *w;
+@property (weak, nonatomic) IBOutlet UITableView *zTableView;
+@property (weak, nonatomic) IBOutlet UITableView *wTableView;
+
+@property(nonatomic,strong) AsyncSocket * socket;
+@end
+
+@implementation HomeViewController
+static NSString *indentify = @"namecell";
+static NSString *headerIdentifier = @"HeaderView";
+static NSString *footerIdentifier = @"FooterView";
+//view完成显示前请求数据
+-(void)viewWillAppear:(BOOL)animated{
+    
+    [super viewWillAppear:animated];
+    NSLog(@"viewWillAppear-----");
+    [self UsuallyArea];
+    [self UsuallyDevice];
+    [collectView reloadData];
+    UIBarButtonItem *ipBtn =[[UIBarButtonItem alloc]initWithTitle:@"默认网关" style:  UIBarButtonItemStylePlain target:self action:@selector(ipBtnClick)];
+    
+    if ([socketStatus isEqualToString:@"socketOnline"]) {
+        [ipBtn setTintColor:[UIColor greenColor]];
+    }else if ([socketStatus isEqualToString:@"socketOutline"]) {
+        [ipBtn setTintColor:[UIColor redColor]];
+    } else {
+        [ipBtn setTintColor:[UIColor redColor]];
+    }
+    self.navigationItem.leftBarButtonItems=@[ipBtn];
+}
+
+//重写当前城市的set方法，在当前城市改变的时候将城市存储到偏好设置中，并给界面的当前位置赋值
+-(void)setCityLoca:(NSString *)cityLoca {
+    
+    _cityLoca = cityLoca;
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    [ud setObject:cityLoca forKey:@"city"];
+    self.city.text = cityLoca;
+}
+
+//重写当前城市天气的set方法，在当前城市天气改变的时候刷新指数table和未来天气table
+-(void)setW:(Waether *)w {
+    
+    _w = w;
+    [self.wTableView reloadData];
+    [self.zTableView reloadData];
+}
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.title = @"首页";
+
+    [self initColltionView1];
+    [self UsuallyArea];
+    [self UsuallyDevice];
+    [self startConnectSocket];
+    //读取当前位置的经纬度和城市
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSString *la = [ud objectForKey:@"latitude"];
+    NSString *lo = [ud objectForKey:@"longitude"];
+    self.cityLoca = [ud objectForKey:@"city"];
+    
+    //如果读取到存储的经纬度，则用这个经纬度请求数据，否则自动定位
+    if (la != 0 && lo != 0) {
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:[la floatValue] longitude:[lo floatValue]];
+        [self loadWeatherWith:location];
+    } else {
+        [self didClickLocation];
+    }
+
+    [self creatViews];
+   
+}
+
+/*******************socket****************************/
+-(AsyncSocket *)socket{
+    
+    if (!_socket) {
+        _socket=[[AsyncSocket alloc]initWithDelegate:self];
+    }
+    return _socket;
+}
+
+- (void)startConnectSocket{
+     NSError * error=nil;
+    self.host= @"10.1.48.47";
+    self.port= @"9999";
+    BOOL result= [self.socket connectToHost:self.host onPort:[self.port integerValue] error:&error];
+    NSLog(@"%d连接结果%@",result,error);
+    NSString* identifierNumber = [[UIDevice currentDevice].identifierForVendor UUIDString] ;
+    NSLog(@"随机手机序列号: %@",identifierNumber);
+    NSString *str1= [identifierNumber stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    NSLog(@"-------11111------%@",str1);
+    [[NSUserDefaults standardUserDefaults]setObject:str1 forKey:@"phoneUDID"];
+
+}
+
+#pragma mark * AsyncSocketDelegate
+- (void)onSocket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port{
+    NSLog(@"连接成功");
+    [self.socket readDataWithTimeout:-1 tag:0];
+}
+
+- (void)onSocket:(AsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag{
+    
+    NSLog(@"读取数据");
+    UIApplicationState  state = [UIApplication sharedApplication].applicationState;
+    if (state==UIApplicationStateBackground) {
+        NSInteger number = [UIApplication sharedApplication].applicationIconBadgeNumber;
+        NSLog(@"设置程序标示后台情况下%ld",number);
+        number++;
+        NSLog(@"%ld--1",number);
+        NSLog(@"%@--2",[NSThread currentThread]);
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:number];
+        
+    }
+    
+    //将数据包转换为字符串
+    NSString* aStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString * massege =[NSString stringWithFormat:@":%@",aStr];
+    NSLog(@"这是服务器返回信息--%@",massege);
+    
+    if([massege rangeOfString:@"Welcome"].location !=NSNotFound)//_roaldSearchText
+    {
+        
+        NSString* identifierNumber = [[UIDevice currentDevice].identifierForVendor UUIDString] ;
+        NSString *str1= [identifierNumber stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        NSString *longConnect =[NSString stringWithFormat:@"{\"clientId\":\"%@\",\"userId\":\"%@\"}",str1,USER_ID];
+        NSString *content = [longConnect stringByAppendingString:@"\r\n"];
+        NSLog(@"发送clientID和userId---%@",content);
+        NSData *data = [content dataUsingEncoding:NSISOLatin1StringEncoding];
+        [self.socket writeData:data withTimeout:-1 tag:0];
+        [self.socket readDataWithTimeout:-1 tag:0];
+    }
+    
+    else  if([massege rangeOfString:@"ping"].location !=NSNotFound)//_roaldSearchText
+    {
+        
+        //通过定时器不断发送消息，来检测长连接
+        self.heartTimer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(checkLongConnectByServe) userInfo:nil repeats:YES];
+        [self.heartTimer fire];
+    }
+    [self.socket readDataWithTimeout:-1 tag:0];
+}
+
+//在这个方法里可以进行读取消息。
+-(void)onSocket:(AsyncSocket *)sock didWriteDataWithTag:(long)tag
+{
+    socketStatus = @"socketOnline";
+    NSLog(@"发送数据");
+    /******接受通知**************/
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSignOutMessage:) name:@"SignOutMessage" object:nil];
+    [self.socket readDataWithTimeout:3 tag:0];//设置写入超时 -1 表示不会使用超时
+    
+}
+
+// 心跳连接
+-(void)checkLongConnectByServe{
+    // 向服务器发送固定可是的消息，来检测长连接
+    NSLog(@"发送OK");
+    NSString *longConnect1 =@"OK";
+    NSString *content1 = [longConnect1 stringByAppendingString:@"\r\n"];
+    NSData *data = [content1 dataUsingEncoding:NSISOLatin1StringEncoding];
+    [self.socket writeData:data withTimeout:-1 tag:0];
+    [self.socket readDataWithTimeout:-1 tag:0];
+    
+    
+}
+
+
+- (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
+{
+    NSLog(@"即将失去连接%@",err);
+    NSLog(@" willDisconnectWithError %ld   err = %@",sock.userData,[err description]);
+    if (err.code == 57) {
+        //        self.socket.userData = SocketOfflineByWifiCut;
+        
+    }
+}
+
+- (void)onSocketDidDisconnect:(AsyncSocket *)sock
+{
+    NSLog(@"失去连接");
+    socketStatus = @"socketOutline";
+    if (sock.userData == SocketOfflineByServer) {
+        // 服务器掉线，重连
+        
+        NSLog(@"SocketOfflineByServer---");
+//      [self startConnectSocket];
+    }
+    else if (sock.userData == SocketOfflineByWifiCut) {
+        NSLog(@"SocketOfflineByWifiCut---");
+        // wifi断开，不进行重连
+        return;
+    }
+    else if (sock.userData == SocketOfflineByUser) {
+        NSLog(@"SocketOfflineByUser---");
+        return;
+        //用户手动断开
+    }
+    
+    
+}
+
+- (void)getSignOutMessage:(NSNotification *)notification1{
+    
+    NSArray *array1 = [[NSArray alloc]initWithArray:notification1.object];
+    
+    NSLog(@"接受通知SignOutmessage---%@",array1[0]);
+    
+    if ([array1[0] isEqualToString:@"SignOut"]) {
+        self.socket.userData = SocketOfflineByUser;
+        [self.socket disconnect];
+    }
+    
+}
+
+
+
+-(void)ipBtnClick{
+    NSLog(@"IP");
+    
+}
+- (void)callModalList
+{
+    AppDelegate *aAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [aAppDelegate.ddMenu showLeftController:YES];
+}
+
+-(void)initColltionView1{
+    UICollectionViewFlowLayout *layout =[[UICollectionViewFlowLayout alloc]init];
+    layout.itemSize=CGSizeMake(80, 110);
+    layout.sectionInset=UIEdgeInsetsMake(0,(LWidth-240)/4,3,(LWidth-240)/4);
+    layout.minimumLineSpacing=5;
+    
+    //如果有多个区 就可以拉动
+    //    [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
+    //设置头部并给定大小
+    [layout setHeaderReferenceSize:CGSizeMake(collectView.frame.size.width,44)];
+    [layout setFooterReferenceSize:CGSizeMake(collectView.frame.size.width,20)];
+    collectView.scrollEnabled =NO;
+    collectView =[[UICollectionView alloc]initWithFrame:CGRectMake(0, 160, LWidth, LHeight-250) collectionViewLayout:layout];
+    collectView.backgroundColor=[UIColor clearColor];
+    collectView.delegate=self;
+    collectView.dataSource=self;
+    //   collectView.alwaysBounceVertical = YES;//当界面内容不超过界面大小时不会滑动，加上面这句话就能滑动了
+    
+    longPressGr = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressToDo:)];
+    longPressGr.minimumPressDuration = 1.0;
+    longPressGr.delegate = self;
+    longPressGr.delaysTouchesBegan = YES;
+    [collectView addGestureRecognizer:longPressGr];
+    [collectView registerNib:[UINib nibWithNibName:@"CollectionViewCell" bundle:nil] forCellWithReuseIdentifier:indentify];
+    [collectView registerNib:[UINib nibWithNibName:@"HomeViewCell" bundle:nil] forCellWithReuseIdentifier:@"cell"];
+    [collectView registerClass:[MyHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerIdentifier];
+    [collectView registerClass:[MyFooterView class] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:footerIdentifier];
+    //    collectView1.allowsMultipleSelection = YES;//允许多选
+    [self.view addSubview:collectView];
+    
+    
+}
+
+-(void)pushSetViewController{
+    KYSettingViewController *vc =[[KYSettingViewController alloc]init];
+    vc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
+//获取常用区域列
+- (void)UsuallyArea{
+    //[areaArray removeAllObjects];
+//    NSLog(@"%@--%@--%@",HTTPIP,USER_ID,SERVERID);
+    NSString *muUrl =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    NSString *urlstring=[NSString stringWithFormat:@"{\"funcode\":\"10302\",\"userid\":\"%@\",\"serverid\":\"%@\",\"actuserid\":\"%@\"}",USER_ID,SERVERID,USER_ID];
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:urlstring,@"jsonrequest", nil];
+    NSLog(@"dict======%@",dict);
+    MyRequest *manager = [MyRequest requestWithURL:muUrl withParameter:dict];
+    NSLog(@"manager======%@",manager);
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if (  [[dictt objectForKey:@"SS"] integerValue]==200) {
+            
+            areaArray= dictt[@"DATA"];
+            [collectView reloadData];
+            NSLog(@"areaArray---%d",areaArray.count);
+        }
+    };
+}
+
+//获取常用设备列
+- (void)UsuallyDevice{
+    //[deviceArray removeAllObjects];
+    NSLog(@"%@--%@--%@",HTTPIP,USER_ID,SERVERID);
+    NSString *muUrl =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    NSString *urlstring=[NSString stringWithFormat:@"{\"funcode\":\"10303\",\"userid\":\"%@\",\"serverid\":\"%@\",\"actuserid\":\"%@\"}",USER_ID,SERVERID,USER_ID];
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:urlstring,@"jsonrequest", nil];
+    NSLog(@"dict======%@",dict);
+    MyRequest *manager = [MyRequest requestWithURL:muUrl withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if (  [[dictt objectForKey:@"SS"] integerValue]==200) {
+            
+            deviceArray= dictt[@"DATA"];
+            // NSLog(@"deviceArray---%d--%@",deviceArray.count,deviceArray[0][@"shortcutname"]);
+            [collectView reloadData];
+        }
+    };
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 2;
+    
+}
+
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    if (section==0) {
+        return areaArray.count;
+    }else if(section==1){
+        
+        return deviceArray.count;
+        
+    }else
+        return 0;
+    
+}
+
+-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+   
+    if (indexPath.section ==0) {
+        HomeViewCell *cell  =[collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+       cell.imageView.layer.masksToBounds = YES;
+       cell.imageView.layer.cornerRadius = 40;
+        cell.Lab.text = areaArray[indexPath.row][@"areaname"];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@%@",HTTPIP,IMAGE_URL,areaArray[indexPath.row][@"areaimg"]]] placeholderImage:[UIImage imageNamed:@"devices_area"]];
+        
+        return cell;
+    }else if (indexPath.section ==1){
+
+        CollectionViewCell *cell  =[collectionView dequeueReusableCellWithReuseIdentifier:@"namecell" forIndexPath:indexPath];
+        cell.imageView.layer.masksToBounds = YES;
+        cell.imageView.layer.cornerRadius = 38;
+        
+        cell.label.text = deviceArray[indexPath.row][@"scenename"];
+        [cell.imageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@%@",HTTPIP,IMAGE_URL,deviceArray[indexPath.row][@"sceneimg"]]] placeholderImage:[UIImage imageNamed:@"setting_icon_cloudserver"]];
+        if ([deviceArray[indexPath.row][@"typecode"]intValue]==1) {
+            
+            cell.glowImageView.hidden=YES;
+            
+        }else if ([deviceArray[indexPath.row][@"typecode"]intValue]==2){
+            cell.glowImageView.hidden=YES;
+            
+        }else{
+            
+            cell.glowImageView.hidden=NO;
+            
+            
+        }
+
+        if ([deviceArray[indexPath.row][@"scenestatus"] isEqualToString:@"1"]) {
+           [cell.glowImageView setImage:[UIImage imageNamed:@"glow"]];
+            
+        }
+        if ([deviceArray[indexPath.row][@"scenestatus"] isEqualToString:@"0"]) {
+            [cell.glowImageView setImage:[UIImage imageNamed:@"glow1"]];
+        }
+        
+        
+             return cell;
+    }
+    
+    
+}
+
+//设置头尾部内容
+-(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionReusableView *reusableView =nil;
+    
+    if (kind ==UICollectionElementKindSectionHeader) {
+        //定制头部视图的内容
+        MyHeaderView *headerV = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:headerIdentifier forIndexPath:indexPath];
+        if (indexPath.section == 0) {
+            headerV.titleLab.text = @"区域:";
+        }
+        if (indexPath.section ==1 ) {
+            headerV.titleLab.text = @"场景:";
+        }
+        
+        reusableView = headerV;
+    }
+    if (kind ==UICollectionElementKindSectionFooter) {
+        MyFooterView *footerV = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:footerIdentifier forIndexPath:indexPath];
+//        if (indexPath.section==3) {
+//            footerV.titleLab1.text = @"123";
+//        }
+        reusableView = footerV;
+    }
+    return reusableView;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+  
+    if (indexPath.section==0) {
+        
+        Area_Detil_ViewController *vc =[[Area_Detil_ViewController alloc]initWithDic: areaArray[indexPath.row]];
+        vc.hidesBottomBarWhenPushed=YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else{
+        
+        [self requestForSwitchSenceWithADic:deviceArray[indexPath.row]];
+        
+        NSLog(@"刷新了---");
+        
+    }
+    
+}
+
+
+
+-(void)longPressToDo:(UILongPressGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint p = [gestureRecognizer locationInView:collectView];
+        NSIndexPath *indexPath = [collectView indexPathForItemAtPoint:p];
+        if (indexPath.section==0) {
+            NSLog(@"0组--");
+            if (![areaArray[indexPath.row][@"shortcutid"] isKindOfClass:[NSNull class]]) {
+                [[NSUserDefaults standardUserDefaults] setObject:areaArray[indexPath.row][@"shortcutid"] forKey:@"shortcutid"];
+            }
+            if (![areaArray[indexPath.row][@"shortcuttype"] isKindOfClass:[NSNull class]]) {
+                [[NSUserDefaults standardUserDefaults] setObject:areaArray[indexPath.row][@"shortcuttype"] forKey:@"shortcuttype"];
+            }
+        }if (indexPath.section==1) {
+            NSLog(@"1组--");
+            if (![deviceArray[indexPath.row][@"shortcutid"] isKindOfClass:[NSNull class]]) {
+                [[NSUserDefaults standardUserDefaults] setObject:deviceArray[indexPath.row][@"shortcutid"] forKey:@"shortcutid"];
+            }
+            if (![deviceArray[indexPath.row][@"shortcuttype"] isKindOfClass:[NSNull class]]) {
+                [[NSUserDefaults standardUserDefaults] setObject:deviceArray[indexPath.row][@"shortcuttype"] forKey:@"shortcuttype"];
+            }
+
+        }
+        
+//        NSLog(@"long press on table view at row%d-- %d",indexPath.section, indexPath.row);
+        
+        
+        if (indexPath.row>=0) {
+            UIAlertController *controller =[UIAlertController alertControllerWithTitle:nil message:nil preferredStyle: UIAlertControllerStyleAlert];
+            
+            UIAlertAction *cacel=[UIAlertAction actionWithTitle:@"取消设置常用" style:0 handler:^(UIAlertAction * _Nonnull action) {
+                [self cacelUsuallyOperation];
+            }];
+            
+            UIAlertAction *cancel=[UIAlertAction actionWithTitle:@"取消" style:0 handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            
+            [controller addAction:cacel];
+            [controller addAction:cancel];
+//            NSLog(@"点击了取消按钮---2");
+            
+            [self presentViewController:controller animated:YES completion:nil];
+            
+        }
+        
+        return;
+    }
+    
+}
+
+
+
+//取消常用操作
+-(void)cacelUsuallyOperation{
+//    NSLog(@"SHORTCUTID--shortcuttype-%@--%@",SHORTCUTID,SHORTCUTTYPE);
+    NSString *muUrl =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    
+    NSString *urlstring=[NSString stringWithFormat:@"{\"funcode\":\"10304\",\"shortcutid\":\"%@\",\"userid\":\"%@\",\"actuserid\":\"%@\",\"shortcuttype\":\"%@\"}",SHORTCUTID,USER_ID,USER_ID,SHORTCUTTYPE];
+    NSLog(@"urlstring---%@",urlstring);
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:urlstring,@"jsonrequest", nil];
+    MyRequest *manager = [MyRequest requestWithURL:muUrl withParameter:dict];
+    NSLog(@"*muUrl---%@",muUrl);
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        [SVProgressHUD dismiss];
+        if (  [[dictt objectForKey:@"SS"] integerValue]==200) {
+             NSLog(@"dict:==%@",dictt[@"DATA"]);
+            [self UsuallyArea];
+            [self UsuallyDevice];
+            [collectView reloadData];
+            [SVProgressHUD showSuccessWithStatus:dictt[@"MSG"]];
+            
+        }else{
+            
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"MSG"]];
+            
+        }
+    };
+}
+
+//点击空白处，移除视图view1
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (![self.view isExclusiveTouch]) {
+        [self.view resignFirstResponder];
+//        NSLog(@"这是点击了空白处---");
+        
+        
+        //        self.view.backgroundColor = [UIColor whiteColor];
+    }
+}
+
+
+//触发场景开关状态
+-(void)requestForSwitchSenceWithADic:(NSDictionary*)DIC{
+    NSLog(@"diuctt==%@",DIC);
+    
+    
+    NSString *muUrl =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    
+    NSString *urlstring=[NSString stringWithFormat:@"{\"funcode\":\"10520\",\"serverid\":\"%@\",\"actuserid\":\"%@\",\"typecode\":\"%@\",\"sceneid\":\"%@\",\"hostsceneid\":\"%@\",\"scenestatus\":\"%d\"}",SERVERID,USER_ID,DIC[@"typecode"],DIC[@"shortcutid"],DIC[@"hostsceneid"],![DIC[@"scenestatus"]integerValue]];
+    
+    NSLog(@"userstring====%@",urlstring);
+    
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:urlstring,@"jsonrequest", nil];
+    MyRequest *manager = [MyRequest requestWithURL:muUrl withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        
+        if (  [[dictt objectForKey:@"SS"] integerValue]==200) {
+            // NSLog(@"dict:==%@",dictt[@"DATA"]);
+            
+            //_ereaArray=dictt[@"DATA"];
+            [self UsuallyDevice];
+
+           [collectView reloadData];
+        
+            [SVProgressHUD  showSuccessWithStatus:[dictt  objectForKey:@"MSG"]];
+            
+            
+            // NSLog(@"_AreaArray====%@",_ereaArray);
+        }else{
+            
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"MSG"]];
+            
+        }
+    };
+    
+    
+    [SVProgressHUD dismiss];
+    
+}
+
+
+/**************************************************************/
+//请求天气数据方法
+- (void) loadWeatherWith:(CLLocation *)loca {
+    
+    [Waether loadWeatherWithCity:(CLLocation *)loca WithSuccessBlock:^(Waether *w) {
+        [self reloadUI:w];
+        self.w = w;
+        //  self.cityLoca = w.currentCity;
+    } andErrorBlock:^(NSError *error){
+        NSLog(@"天气加载出错!   %@", error);
+    }];
+    
+}
+
+//在请求数据结束天气数据通过代码块将数据传过来以后刷新界面数据
+- (void) reloadUI:(Waether *)w {
+    
+    //取出今天的天气数据
+    Weather_data *wd = [w.weather_datas firstObject];
+    
+    //填充温度数据
+    self.sheshi.text = [NSString stringWithFormat:@"%@", wd.temperature];
+    //填充天气数据
+    self.weather.text = wd.weather;
+    //设置天气对应图片
+//    self.weatherImage.image = [UIImage imageNamed:[self loadWeatherImageNamed:wd.weather]];
+//    [self.weatherImage setImage:[UIImage imageNamed:@"屏幕快照 2016-08-04 下午7.04.06"]];
+//    [self setWeatherIcon];`
+    //设置当前时间
+//    self.time.text = wd.date;
+    NSRange start = [wd.date rangeOfString:@"："];
+    NSRange end = [wd.date rangeOfString:@"℃"];
+    NSString *str = [wd.date substringWithRange:NSMakeRange(start.location+1, end.location-start.location-1)];
+    self.time.text = str;
+    NSLog(@"str---%@",str);
+    
+    //设置pm2.5指数
+    self.pm.text = [NSString stringWithFormat:@"PM2.5的指数:%@", w.pm25];
+    NSLog(@"-----%@----设置图片",self.weather.text);
+    
+    if ([self.weather.text isEqualToString:@"晴"]) {
+        self.weatherImage.image = [UIImage imageNamed:@"晴"];
+    }
+    if ([self.weather.text isEqualToString:@"阴"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"阴"]];
+    }
+    if ([self.weather.text isEqualToString:@"晴转多云"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"晴转多云"]];
+    }
+    if ([self.weather.text isEqualToString:@"多云"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"多云"]];
+    }
+    if ([self.weather.text isEqualToString:@"雨"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"雨"]];
+    }
+    if ([self.weather.text isEqualToString:@"雪"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"雪"]];
+    }
+    if ([self.weather.text isEqualToString:@"大雨转晴"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"大雨转晴"]];
+    }
+    if ([self.weather.text isEqualToString:@"阴转晴"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"阴转晴"]];
+    }
+    if ([self.weather.text isEqualToString:@"雨夹雪"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"雨夹雪"]];
+    }
+    if ([self.weather.text isEqualToString:@"阵雨"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"阵雨"]];
+    }
+    if ([self.weather.text isEqualToString:@"雷阵雨"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"雷阵雨"]];
+    }
+    if ([self.weather.text isEqualToString:@"中雨"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"中雨"]];
+    }
+    if ([self.weather.text isEqualToString:@"小雪"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"小雪"]];
+    }
+    if ([self.weather.text isEqualToString:@"小雨"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"小雨"]];
+    }
+    if ([self.weather.text isEqualToString:@"中雪"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"中雪"]];
+    }
+    if ([self.weather.text isEqualToString:@"大雨"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"大雨"]];
+    }
+    if ([self.weather.text isEqualToString:@"大雪"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"大雪"]];
+    }
+    if ([self.weather.text isEqualToString:@"雷阵雨转多云"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"雷阵雨转多云"]];
+    }
+    if ([self.weather.text isEqualToString:@"阴转多云"]) {
+        [self.weatherImage setImage:[UIImage imageNamed:@"阴转多云"]];
+    }
+   
+}
+
+//点击定位
+- (void) didClickLocation {
+    
+    [SVProgressHUD showWithStatus:@"正在定位" maskType:SVProgressHUDMaskTypeBlack];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [SVProgressHUD dismiss];
+        
+        self.mgr = [CLLocationManager new];
+        
+        if ([self.mgr respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+            [self.mgr requestWhenInUseAuthorization];
+        }
+        
+        self.mgr.delegate = self;
+        
+        [self.mgr startUpdatingLocation];
+        
+    });
+}
+
+//设置导航栏标题与按钮
+- (void) creatViews {
+    
+    UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithTitle:@"定位" style:UIBarButtonItemStylePlain target:self action:@selector(didClickLocation)];
+    self.navigationItem.rightBarButtonItem = btn;
+    
+}
+
+
+//根据天气情况返回对应的天气图片名
+//- (NSString *)loadWeatherImageNamed:(NSString *)type {
+//    NSLog(@"---");
+//}
+
+//定位代理方法
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations {
+    
+    CLLocation *location = locations.lastObject;
+    
+    [self loadWeatherWith:location];
+    
+    //反地理编码
+    CLGeocoder *geocoder = [CLGeocoder new];
+    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> * _Nullable placemarks, NSError * _Nullable error) {
+        //放错处理
+        if (placemarks.count == 0 || error) {
+            NSLog(@"定位出错");
+            return;
+        }
+        
+        for (CLPlacemark *placemark in placemarks) {
+            
+            //将当前位置赋给控制器属性
+            self.cityLoca = [NSString stringWithFormat:@"%@%@", placemark.locality, placemark.subLocality];
+            
+            //根据当前位置请求天气数据
+            [self loadWeatherWith:placemark.location];
+            
+            //将当前位置和城市存储到偏好设置中
+            NSString *la = [NSString stringWithFormat:@"%lf", placemark.location.coordinate.latitude];
+            NSString *lo = [NSString stringWithFormat:@"%lf", placemark.location.coordinate.longitude];
+            NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+            [ud setObject:la forKey:@"latitude"];
+            [ud setObject:lo forKey:@"longitude"];
+            NSString *ci = [NSString stringWithFormat:@"定位完成\n当前位置：%@", self.cityLoca];
+            
+            [SVProgressHUD showSuccessWithStatus:ci];
+        }
+        
+    }];
+    
+    [self.mgr stopUpdatingLocation];
+    
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if (tableView.tag == 10) {
+        return self.placemarks.count;
+    }
+    if (tableView.tag == 20) {
+        return self.w.indexs.count;
+    }
+    if (tableView.tag == 30) {
+        return self.w.weather_datas.count - 1;
+    }
+    return 0;
+    
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (tableView.tag == 10) {
+        CLPlacemark *placemark = self.placemarks[indexPath.row];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"citycell"];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"citycell"];
+        }
+        cell.textLabel.text = placemark.name;
+        return cell;
+    } else if (tableView.tag == 20) {
+        Index *idx = self.w.indexs[indexPath.row];
+        ZCell *cell = [tableView dequeueReusableCellWithIdentifier:@"zcell"];
+        if (cell == nil) {
+            cell = [[ZCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"zcell"];
+        }
+        cell.idx = idx;
+        return cell;
+    } else if (tableView.tag == 30) {
+        Weather_data *wd = self.w.weather_datas[indexPath.row + 1];
+        WCell *cell = (WCell *)[tableView dequeueReusableCellWithIdentifier:@"wcell"];
+        if (cell == nil) {
+            cell = [[WCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"wcell"];
+        }
+        cell.wd = wd;
+        return cell;
+    }
+    return nil;
+}
+
+//城市搜索结果列表点击自动切换位置并根据当前城市确定经纬度请求天气数据
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [SVProgressHUD showWithStatus:@"正在切换" maskType:SVProgressHUDMaskTypeBlack];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.tableView.hidden = YES;
+    }];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        [SVProgressHUD dismiss];
+        
+        CLPlacemark *placemark = self.placemarks[indexPath.row];
+        
+        NSString *la = [NSString stringWithFormat:@"%lf", placemark.location.coordinate.latitude];
+        NSString *lo = [NSString stringWithFormat:@"%lf", placemark.location.coordinate.longitude];
+        
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        [ud setObject:la forKey:@"latitude"];
+        [ud setObject:lo forKey:@"longitude"];
+        
+        NSString *str = [NSString stringWithFormat:@"切换成功!\n当前位置:%@", placemark.name];
+        
+        //        if (placemark.subLocality) {
+        //            self.cityLoca = [NSString stringWithFormat:@"%@%@",placemark.locality, placemark.subLocality];
+        //        }
+        self.cityLoca = [NSString stringWithFormat:@"%@",placemark.name];
+        
+        [self loadWeatherWith:placemark.location];
+        
+        [SVProgressHUD showSuccessWithStatus:str];
+        
+    });
+}
+
+@end

@@ -1,0 +1,184 @@
+//
+//  PrefixHeader.pch
+//  SyncSmartHome
+//
+//  Created by SciyonSoft_WangJie on 16/5/3.
+//  Copyright © 2016年 sciyonSoft. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+//
+
+
+
+#import "SVProgressHUD.h" //过度菊花
+#import "MyRequest.h" //网络请求
+#import "AppDelegate.h"
+#import "XMLDictionary.h"
+#import "CommonTool.h"
+
+#import "DropdownMenuController.h"
+#import "UIImageView+WebCache.h"
+//测试一下svn是否管用
+//#define APP_UPDATA_XMLURL @""
+#define APP_DOWNLOAD_XCURL @"itms-services:/action=download-manifest&url=https://git.http://192.168.6.44/slrd/proxymobile/getiosversion.xmloschina.net/zsm605/sciyonApp/raw/master/manifest_slrd.plist"
+#define APP_DOWNLOAD_CSURL @"itms-services:/action=download-manifest&url=https://git.oschina.net/zsm605/sciyonApp/raw/master/manifest_test.plist"
+//根目8
+
+
+
+
+
+//#define HTTPIP [[NSUserDefaults standardUserDefaults]objectForKey:@"sciyonip"]
+#define LOGIN_URL @"Admin/Index/login"
+#define IMAGE_URL @"/Home/Index/getImage?img="
+#define App (AppDelegate *)[[UIApplication sharedApplication] delegate]
+
+#define LWidth [UIScreen mainScreen].bounds.size.width //屏幕宽
+#define LHeight [UIScreen mainScreen].bounds.size.height //高
+
+#define IPHONE_5 [UIScreen mainScreen].bounds.size.width < 375
+#define IPHONE_6 [UIScreen mainScreen].bounds.size.width == 375
+#define IPHONE_6p [UIScreen mainScreen].bounds.size.width > 375
+
+//[[NSUserDefaults standardUserDefaults] setObject:_myDic[@"usercode"] forKey:@"usercode"];efaults standardUserDefaults] setObject:_myDic[@"username"] forKey:@"
+//[[NSUserDusername"];
+//[[NSUserDefaults standardUserDefaults] setObject:_myDic[@"phonenumber"] forKey:@"phonenumber"];
+//[[NSUserDefaults standardUserDefaults] setObject:_myDic[@"userstatus"] forKey:@"userstatus"];
+//[[NSUserDefaults standardUserDefaults] setObject:_myDic[@"id"] forKey:@"id"];
+
+
+/*
+ userimg3
+ */
+#define MODIFYROLEID [[NSUserDefaults standardUserDefaults] objectForKey:@"modifyroleid"]//修改角色，选中那个角色的id
+#define SELIDSTRING [[NSUserDefaults standardUserDefaults] objectForKey:@"selidstring"]//用户管理，选中角色的id
+//#define SELNAMESTRING [[NSUserDefaults standardUserDefaults] objectForKey:@"selnamestring"]//用户管理，选中的用户的角色
+#define SERVERIDSTR [[NSUserDefaults standardUserDefaults]objectForKey:@"serveridstr"]
+/******************************************************************/
+#define REVISENAME [[NSUserDefaults standardUserDefaults]objectForKey:@"reviseusername"]
+#define USERPHONE [[NSUserDefaults standardUserDefaults] objectForKey:@"userphonenumber"]
+#define BAOCUNJIEGUO [[NSUserDefaults standardUserDefaults]objectForKey:@"baocunjieguo"]
+#define XMLARRAY [[NSUserDefaults standardUserDefaults]objectForKey:@"XmlArray"]
+#define ROLEARR [[NSUserDefaults standardUserDefaults]objectForKey:@"rolearr"]
+#define USERIDS [[NSUserDefaults standardUserDefaults]objectForKey:@"userids"]//选中的那个用户的ID
+#define ROLE_IMG [[NSUserDefaults standardUserDefaults]objectForKey:@"roleimg1"]
+#define AREANAME [[NSUserDefaults standardUserDefaults]objectForKey:@"areaname"]
+#define ROLE_NAME [[NSUserDefaults standardUserDefaults]objectForKey:@"rolename1"]
+#define SERVERID [[NSUserDefaults standardUserDefaults]objectForKey:@"serverid"]
+#define ROLEID [[NSUserDefaults standardUserDefaults]objectForKey:@"roleid"]
+#define USERCODE [[NSUserDefaults standardUserDefaults] objectForKey:@"usercode"]
+#define USERNAME [[NSUserDefaults standardUserDefaults] objectForKey:@"username"]
+#define WECHAT [[NSUserDefaults standardUserDefaults] objectForKey:@"wechat"]
+#define PHONENUMBER [[NSUserDefaults standardUserDefaults] objectForKey:@"phonenumber"]
+#define USERSTATUS [[NSUserDefaults standardUserDefaults] objectForKey:@"userstatus"]
+#define USER_ID [[NSUserDefaults standardUserDefaults] objectForKey:@"id"]//登录用户的ID
+#define is_LOGIN [[NSUserDefaults standardUserDefaults] objectForKey:@"login"]
+#define USERTASK [[NSUserDefaults standardUserDefaults] objectForKey:@"positionName"]
+#define DEPTGUID [[NSUserDefaults standardUserDefaults] objectForKey:@"deptGuid"]
+#define DEPTNAME [[NSUserDefaults standardUserDefaults] objectForKey:@"deptName"]
+#define ORGGUID [[NSUserDefaults standardUserDefaults] objectForKey:@"orgGuid"]
+#define ORGNAME [[NSUserDefaults standardUserDefaults] objectForKey:@"orgName"]
+#define POSITIONGUID [[NSUserDefaults standardUserDefaults]objectForKey:@"positionGuid"]
+#define ACCREDQUESTION [[NSUserDefaults standardUserDefaults] objectForKey:@"accredquestion"]
+#define ACCREDREPLY [[NSUserDefaults standardUserDefaults] objectForKey:@"accredreply"]
+
+
+#define CURRENTUSERCODE [[NSUserDefaults standardUserDefaults]objectForKey:@"currentusercode"]
+#define UUID1 [[NSUserDefaults standardUserDefaults] objectForKey:@"phoneUDID"]
+
+#define USERIMG [[NSUserDefaults standardUserDefaults]objectForKey:@"userimg"]
+#define USERNAMELIST [[NSUserDefaults standardUserDefaults]objectForKey:@"usernamelist"]
+#define PWD [[NSUserDefaults standardUserDefaults]objectForKey:@"pwd"]
+#define DAYBEFOR [[NSUserDefaults standardUserDefaults]objectForKey:@"beforDate"]
+#define SELECTEDUSERID [[NSUserDefaults standardUserDefaults] objectForKey:@"selecteduserid"]//选择用户ID，日志模块使用
+#pragma clang diagnostic ignored "Multiple build commands for output file /Users/sciyonSoft/Library/Developer/Xcode/DerivedData/Proxy_ios-glucuebgzlokglgqzjodumpzcvvw/Build/Products/Debug-iphonesimulator/Proxy_ios.app/fujian@2x.png"
+
+
+#pragma clang diagnostic ignored "'dismissModalViewController Animated:'is deprecated:first deprecated in iOS 6.0"
+
+
+#define HTTPIP [[NSUserDefaults standardUserDefaults]objectForKey:@"http"]
+#define TAG [[NSUserDefaults standardUserDefaults]objectForKey:@"myInteger"]
+
+//现场
+//
+//#define LOCAL_SERVIER @"10.1.48.76"//外网
+#define LOCAL_SERVIER @"10.1.42.58"// 内网wifi
+#define CLOULD_SERVIER @"10.1.48.53:8080"//外网
+
+//#define LOCAL_SERVIER @"10.1.48.53:8080"//外网
+//#define CLOULD_SERVIER @"10.1.42.58"//内网wifi
+
+#define IP @"192.168.1.201"
+#define Port @"8000"
+#define User @"admin"
+#define Psd @"zxcv1234"
+#define AUDIO_IP @"/httpapi.asp?command="
+
+//现场测试
+//
+//#define HTTPSIM @"222.191.242.228:8081"//外网
+//#define HTTPWIFI @"192.168.0.79"//内网wifi
+////测试
+
+//#define HTTPSIM @"google.com"//外网
+//#define HTTPWIFI @"192.168.6.44"//内网wifi
+//
+
+
+//#define HTTPSIM @"google.com"//外网
+//#define HTTPWIFI @"10.88.12.115"//内网wifi
+
+//开发工作任务测试
+//#define HTTPSIM @"10.88.12.15:20159"//外网
+//#define HTTPWIFI @"google.com"//内网wifi
+//
+
+//NSLocationWhenInUseUsageDescription  实现定位才能提供准确的天气预报
+
+//Localization native development region en
+//演示环境
+
+
+//#define HTTPSIM @"221.226.212.74:65532"//外网
+//#define HTTPWIFI @"10.88.12.115:65532"//内网wifi
+//更新时间
+#define CHANGE_TIME @"2016-3-29"
+
+#define FLAG  @"[CONNECT]"
+//#define HTTPIP [[NSUserDefaults standardUserDefaults] objectForKey:@"http"]
+
+//********************************新闻配置
+#define kStatusHeight 20
+#define kScreenW [UIScreen mainScreen].bounds.size.width
+#define kScreenH [UIScreen mainScreen].bounds.size.height
+#define RGBColor(r,g,b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+#define RGBColorAlpha(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+
+
+
+
+#define ILColor(r,g,b) ([UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1])
+// 2.判断是否为iOS7
+#define iOS7 ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
+
+#define padding 20
+#define itemPerLine 4
+#define kItemW (kScreenW-padding*(itemPerLine+1))/itemPerLine
+#define kItemH 25
+
+typedef enum{
+    topViewClick = 0,
+    FromTopToTop = 1,
+    FromTopToTopLast = 2,
+    FromTopToBottomHead = 3,
+    FromBottomToTopLast = 4
+} animateType;
+
+
+#endif /* PrefixHeader_pch */

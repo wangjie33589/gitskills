@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CheckController">
+            <connections>
+                <outlet property="MyTabkeView" destination="cq3-R9-Mcz" id="Zd9-rh-R4y"/>
+                <outlet property="mySearchbar" destination="VcU-IX-X3Y" id="UeI-6y-WNE"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <searchBar contentMode="redraw" placeholder="请输入设备编号／条形码／客户／部件编号" translatesAutoresizingMaskIntoConstraints="NO" id="VcU-IX-X3Y">
+                    <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="KqJ-2b-5Ld"/>
+                    </constraints>
+                    <textInputTraits key="textInputTraits"/>
+                </searchBar>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cq3-R9-Mcz">
+                    <rect key="frame" x="0.0" y="108" width="320" height="372"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="cq3-R9-Mcz" secondAttribute="bottom" id="0WB-6I-Zmg"/>
+                <constraint firstItem="cq3-R9-Mcz" firstAttribute="top" secondItem="VcU-IX-X3Y" secondAttribute="bottom" id="4t6-JH-V57"/>
+                <constraint firstItem="VcU-IX-X3Y" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="J6y-yt-86Y"/>
+                <constraint firstItem="VcU-IX-X3Y" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="TIR-Ok-TiV"/>
+                <constraint firstAttribute="trailing" secondItem="VcU-IX-X3Y" secondAttribute="trailing" id="YzV-UO-VpB"/>
+                <constraint firstItem="cq3-R9-Mcz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="mhA-2w-NK7"/>
+                <constraint firstAttribute="trailing" secondItem="cq3-R9-Mcz" secondAttribute="trailing" id="rOK-5b-xVt"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="364" y="-47"/>
+        </view>
+    </objects>
+</document>

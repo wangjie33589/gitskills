@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="progressCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQ7-gE-U2Z">
+                        <rect key="frame" x="277" y="0.0" width="43" height="43"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="43" id="qcN-UG-GFv"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wb3-Pq-OYW">
+                        <rect key="frame" x="0.0" y="0.0" width="135" height="43"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="lqw-pj-gUt">
+                        <rect key="frame" x="141" y="5" width="130" height="31"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="YNs-2O-OeW"/>
+                            <constraint firstAttribute="width" constant="126" id="v8m-kf-bAq"/>
+                        </constraints>
+                    </slider>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dividing-line.png" translatesAutoresizingMaskIntoConstraints="NO" id="pGi-ly-mLP">
+                        <rect key="frame" x="0.0" y="43" width="320" height="1"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="9j7-ss-b1K"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="vQ7-gE-U2Z" secondAttribute="bottom" id="0fb-kc-Hrv"/>
+                    <constraint firstAttribute="trailing" secondItem="vQ7-gE-U2Z" secondAttribute="trailing" id="3r6-73-p3m"/>
+                    <constraint firstItem="pGi-ly-mLP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="3rD-AT-0uv"/>
+                    <constraint firstItem="wb3-Pq-OYW" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="6qM-MO-Ld9"/>
+                    <constraint firstItem="lqw-pj-gUt" firstAttribute="leading" secondItem="wb3-Pq-OYW" secondAttribute="trailing" constant="8" id="AeT-RL-tBn"/>
+                    <constraint firstAttribute="trailing" secondItem="pGi-ly-mLP" secondAttribute="trailing" id="CIu-b1-OTX"/>
+                    <constraint firstItem="vQ7-gE-U2Z" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Ke8-sV-vaO"/>
+                    <constraint firstItem="vQ7-gE-U2Z" firstAttribute="leading" secondItem="lqw-pj-gUt" secondAttribute="trailing" constant="8" id="a0N-bA-4DZ"/>
+                    <constraint firstAttribute="bottom" secondItem="pGi-ly-mLP" secondAttribute="bottom" constant="-1" id="bUA-2Q-4CO"/>
+                    <constraint firstItem="wb3-Pq-OYW" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="fnl-R0-pbK"/>
+                    <constraint firstItem="lqw-pj-gUt" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="v19-XB-ivk"/>
+                    <constraint firstAttribute="bottom" secondItem="wb3-Pq-OYW" secondAttribute="bottom" id="wF0-g8-PVu"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="firstLabel" destination="wb3-Pq-OYW" id="K2a-qo-o67"/>
+                <outlet property="secondlab" destination="vQ7-gE-U2Z" id="BM1-YY-ptt"/>
+                <outlet property="slider" destination="lqw-pj-gUt" id="1Pm-si-whO"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="dividing-line.png" width="320" height="1"/>
+    </resources>
+</document>

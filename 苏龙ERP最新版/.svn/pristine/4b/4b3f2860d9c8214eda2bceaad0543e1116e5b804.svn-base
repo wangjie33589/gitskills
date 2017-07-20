@@ -1,0 +1,14 @@
+//
+//  MyTool.h
+//  Proxy_ios
+//
+//  Created by sciyonSoft on 15/12/21.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface MyTool : NSObject
++ (UIColor *)colorWithHexString:(NSString *)stringToConvert;
+
+@end

@@ -1,0 +1,281 @@
+//
+//  DetilVC.m
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+
+#define SHOW_ALERT(msg) UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:msg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];\
+[alert show]
+
+#import "DetilVC.h"
+#import "handelVC.h"
+#import "confirmVC.h"
+#import "reworkVC.h"
+#import "NetWorkTool.h"
+#import "TopView.h"
+
+
+@interface DetilVC ()<TopViewDelegate>{
+    UIScrollView *totalScrollView;
+    NSArray *titleArray;
+
+
+
+}
+
+@end
+
+@implementation DetilVC
+
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    // [self configData];
+    self.title=@"工作任务";
+    
+    
+    self.darray=[[NSMutableArray alloc]initWithCapacity:0];
+    
+   // [self loadSubViews];
+    titleArray=[[NSArray alloc]initWithObjects:@"处理信息",@"确认信息" ,@"返工信息",nil];
+    
+      totalScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 40, LWidth, LHeight-104)];//总scrollView
+    totalScrollView.backgroundColor = [UIColor whiteColor];
+    totalScrollView.pagingEnabled = YES;
+    totalScrollView.delegate = self;
+    [self.view addSubview:totalScrollView];
+    [self initViewXml];
+  
+    [NetWorkTool searchDetilWithFGUID:self.FGUID completionBlock:^(NSDictionary *dic) {
+        // SHOW_ALERT(dic[@"errorMsg"]);
+        NSDictionary *R=dic[@"Data"][@"R"];
+        NSLog(@"RRRRRRR===%@",R);
+        
+        
+        _model =[[detilModel alloc]initWithDic:R];
+        
+        [self.darray addObject:_model];
+        
+        [self loadViewController];
+        
+    }];
+
+    
+    
+    
+}
+
+- (void)initViewXml
+{
+    totalScrollView.contentSize = CGSizeMake(LWidth*2, 40);
+    /// [self requestShowDataList4];
+    
+    TopView* vc = [[TopView alloc] initWithFrame:CGRectMake(0, 0, LWidth, 40)];
+    vc.array = titleArray;
+    vc.delegate = self;
+    vc.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:vc];
+    //    for (NSInteger index = 0; index < showCountArray.count; index ++) {
+    //        scheduleTableView* view = [[scheduleTableView alloc] initWithModel:showCountArray[index] guid:[showDictA objectForKey:@"DATAGUID"]];
+    //        view.frame = CGRectMake(index * LWidth+LWidth, 0, LWidth, totalScrollView.frame.size.height);
+    //        view.backgroundColor = [UIColor whiteColor];
+    //        view.delegate = self;
+    //        [totalScrollView addSubview:view];
+    //    }
+    ////
+    //    alertView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LWidth, LHeight)];
+    //    alertView.hidden = YES;
+    //    alertView.backgroundColor = [UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3];
+    //    [self.view addSubview:alertView];
+    //    upTable = [[UITableView alloc] initWithFrame:CGRectMake(30, 5, LWidth-60, LHeight-104)];
+    //    upTable.delegate = self;
+    //    upTable.dataSource = self;
+    //    upTable.sectionHeaderHeight = 30.0f;
+    //    upTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //    [upTable setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    ////    upTable.frame = CGRectMake(upTable.frame.origin.x, upTable.frame.origin.y, upTable.frame.size.width, buttonsArray.count*44);
+    //    [alertView addSubview:upTable];
+    //    [self.view bringSubviewToFront:alertView];
+    //    if (![isShow isEqualToString:@"true"]) {
+    //        self.navigationItem.rightBarButtonItem = nil;
+    //        [SVProgressHUD showErrorWithStatus:@"当前流程环节不允许移动端处理，请到电脑端处理"];
+    //    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+-(void)loadViewController{
+    handelVC *ditilvc =[[handelVC alloc]initWithDataSourse:self.darray];
+    ditilvc.view.frame=CGRectMake(0, 0, LWidth, totalScrollView.frame.size.height);
+    [totalScrollView addSubview:ditilvc.view];
+    [self addChildViewController:ditilvc];
+    
+    
+
+    confirmVC  *confirm =[[confirmVC alloc]initWithDataSourse:self.darray];
+    confirm.view.frame=CGRectMake(LWidth, 0,LWidth, totalScrollView.frame.size.height);
+    [totalScrollView addSubview:confirm.view];
+    [self addChildViewController:confirm];
+
+
+    reworkVC *rework =[[reworkVC alloc]initWithDataSourse:self.darray];
+    rework.view.frame=CGRectMake(2*LWidth, 0, LWidth, totalScrollView.frame.size.height);
+    [totalScrollView addSubview:rework.view];
+  
+    [self addChildViewController:rework];
+ 
+
+
+
+
+
+
+
+}
+-(void)loadSubViews{
+    _imgView.userInteractionEnabled=YES;
+    //[_imgView setUserInteractionEnabled:YES];
+    _scrollView =[[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, self.view.bounds.size.width, self.view.bounds.size.height-64)] ;
+    _scrollView.showsHorizontalScrollIndicator=NO;
+    [self.view addSubview:_scrollView];_scrollView.delegate=self;
+    _scrollView.pagingEnabled=YES;
+    _scrollView.contentSize=CGSizeMake(_scrollView.frame.size.width*3, _scrollView.frame.size.height);
+
+    NSArray *segControlData=[[NSArray alloc]initWithObjects:@"处理信息",@"确认信息",@"返工信息", nil];
+    _segControl =[[UISegmentedControl alloc]initWithItems:segControlData];
+    _segControl.selectedSegmentIndex=0;
+    _segControl.frame=CGRectMake(0, 0, 300, 35);
+    _segControl.center=CGPointMake(self.view.center.x, self.view.bounds.size.height-45);
+    [_segControl addTarget:self action:@selector(segControl:) forControlEvents:UIControlEventValueChanged];
+    
+    
+    [self.view addSubview:_segControl];
+    [self configBtn];
+    
+    
+    
+}
+-(void)pushNewsViewController:(NSInteger)page{
+    [totalScrollView setContentOffset:CGPointMake(LWidth*page, 0) animated:YES];
+
+
+
+
+}
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    int page =_scrollView.contentOffset.x/_scrollView.frame.size.width;
+    _segControl.selectedSegmentIndex=page;
+    switch (page) {
+        case 0:
+        {
+            [self configBtn];
+            
+
+        
+        }
+            break;
+        case 1:{
+            [self configOtherBtn];
+            
+            
+        
+        }break;
+        case 2:{
+            [self configOtherBtn];
+            
+        }break;
+            
+        default:
+            break;
+    }
+
+
+
+
+
+
+}
+-(void)segControl:(UISegmentedControl*)seg{
+    
+    [_scrollView setContentOffset:CGPointMake(_scrollView.frame.size.width*seg.selectedSegmentIndex, 0) ];
+    
+    switch (seg.selectedSegmentIndex) {
+        case 0:
+        {
+            [self configBtn];
+        
+            
+        }
+            break;
+        case 1:{
+            
+            [self configOtherBtn];
+            
+        }break;
+        case 2:{
+            [self configOtherBtn];
+            
+        }break;
+            
+        default:
+            break;
+    }
+    
+
+    
+}
+-(void)configBtn{
+    _commitBtn.hidden=NO;
+    _redworkBtn.hidden=YES;
+    _confirmBtn.hidden=YES;
+_topLabel.text=@"任务处理";
+
+
+
+}
+-(void)configOtherBtn{
+    _commitBtn.hidden=YES;
+    _redworkBtn.hidden=NO;
+    _confirmBtn.hidden=NO;
+_topLabel.text=@"确认任务";
+
+
+
+
+
+}
+
+
+
+
+
+- (IBAction)reworkBtn:(id)sender {
+    
+    NSLog(@"rework");
+}
+
+- (IBAction)confirmBtn:(id)sender {
+    NSLog(@"confirm");
+}
+
+- (IBAction)commitBtncick:(UIButton *)sender {
+    NSLog(@"commitBtn");
+}
+- (IBAction)goBackBtn:(UIButton *)sender {
+    NSLog(@"back");
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
+
+
+@end

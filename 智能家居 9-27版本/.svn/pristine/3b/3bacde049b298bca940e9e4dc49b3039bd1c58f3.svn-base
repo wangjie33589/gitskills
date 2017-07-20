@@ -1,0 +1,699 @@
+//
+//  UserViewController.m
+//  SyncSmartHome
+//
+//  Created by SciyonSoft_WangJie on 16/5/3.
+//  Copyright © 2016年 sciyonSoft. All rights reserved.
+//
+//
+#import "UserViewController.h"
+#import "SVProgressHUD.h"
+#import "KYMusicCollectionViewController.h"
+#import "KYMonitorViewController.h"
+#import "KYVoiceControlViewController.h"
+#import "KYAccountManageViewController.h"
+#import "KYPersonalCenterViewController.h"
+#import "KYMusicCollectionTableViewController.h"
+#import "KYOpreationViewController.h"
+#import "KYMessageTableViewController.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "VPImageCropperViewController.h"
+#import "UIImageView+WebCache.h"
+#import "KYSettingViewController.h"
+#import "DemoViewController.h"
+#import "KYUserCell.h"
+#import "MJRefresh.h"
+#define ORIGINAL_MAX_WIDTH 640.0f
+#define FilePath [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)lastObject] stringByAppendingString:@"icon"]
+@interface UserViewController ()<UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate,VPImageCropperDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIActionSheetDelegate,UITextFieldDelegate>
+{
+    BOOL selected;
+    NSDictionary *_showDic;
+    NSMutableArray *_imageArray;
+    NSMutableArray *_showArray;
+    NSMutableDictionary *_myDic;//用户信息数据；
+    int  h;
+    
+    UIImage *_userImag;
+}
+@property (weak, nonatomic) IBOutlet UILabel *UserCode;
+@property (weak, nonatomic) IBOutlet UILabel *UserName;
+@property (strong ,nonatomic)UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UIImageView *imageView;
+
+@end
+
+@implementation UserViewController
+static NSString *indentify = @"cell";
+
+-(instancetype)initWithDic:(NSDictionary *)aDic{
+    self =[super init];
+    if (self) {
+        _showDic=aDic;
+        
+    }
+    return self;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden=NO;
+    [self request];
+}
+
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title=@"我的";
+    selected = false;
+    self.tabBarController.tabBar.hidden=NO;
+        self.navigationController.navigationBar.shadowImage = [[UIImage alloc] init];
+
+
+    UIBarButtonItem * lefyButton = [[UIBarButtonItem alloc]
+                                    initWithTitle:@""
+                                    style:UIBarButtonItemStyleDone
+                                    target:self
+                                    action:@selector(callModalList)];
+ 
+    [lefyButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+                                        [UIFont systemFontOfSize:15], NSFontAttributeName,
+                                        [UIColor whiteColor], NSForegroundColorAttributeName,
+                                        nil]
+                              forState:UIControlStateNormal];
+    lefyButton.image = [UIImage imageNamed:@"leftImag"];
+    self.navigationItem.leftBarButtonItem = lefyButton;
+    [self request];
+        UITapGestureRecognizer * tapView = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(changeUserImag)];
+    
+    _imageView.userInteractionEnabled = YES;
+    [self.imageView addGestureRecognizer:tapView];
+    self.imageView.layer.masksToBounds = YES;
+    self.imageView.layer.cornerRadius = 40;
+    
+    h = (LHeight-64-50)/11;
+    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 3*h, LWidth, LHeight-3*h)];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.scrollEnabled =NO; //设置tableview 不能滚动
+
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    [_tableView registerNib:[UINib nibWithNibName:@"KYUserCell" bundle:nil] forCellReuseIdentifier:indentify];
+    [self.view addSubview:_tableView];
+}
+
+
+- (void)callModalList
+{
+    AppDelegate *aAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [aAppDelegate.ddMenu showLeftController:YES];
+}
+
+
+//请求登录用户信息
+- (void)request{
+    NSLog(@"%@--%@--%@",HTTPIP,USER_ID,SERVERID);
+    NSString *muUrl =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    NSString *urlstring=[NSString stringWithFormat:@"{\"funcode\":\"10214\",\"userid\":\"%@\",\"serverid\":\"%@\"}",USER_ID,SERVERID];
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:urlstring,@"jsonrequest", nil];
+     MyRequest *manager = [MyRequest requestWithURL:muUrl withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if (  [[dictt objectForKey:@"SS"] integerValue]==200) {
+            if (![dictt[@"DATA"] isKindOfClass:[NSNull class]]) {
+                //                  NSLog(@"用户信息为==%@",dictt[@"DATA"]);
+                
+                
+                _myDic=dictt[@"DATA"];
+                
+                if (![_myDic[@"userstatus"] isKindOfClass:[NSNull class]]) {
+                    
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"userstatus"] forKey:@"userstatus"];
+                }
+                if (![_myDic[@"pwd"] isKindOfClass:[NSNull class]] ) {
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"pwd"] forKey:@"pwd"];
+                }
+                if (![_myDic[@"usercode"] isKindOfClass:[NSNull class]]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"usercode"] forKey:@"usercode"];
+                    _UserCode.text = [NSString stringWithFormat:@"账户: %@",_myDic[@"usercode"]];
+                }
+                if (![_myDic[@"username"] isKindOfClass:[NSNull class]]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"username"] forKey:@"username"];
+                      _UserName.text = [NSString stringWithFormat:@"昵称: %@",_myDic[@"username"]];
+                }
+                if (![_myDic[@"phonenumber"] isKindOfClass:[NSNull class]]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"phonenumber"] forKey:@"phonenumber"];
+                }
+                if (![_myDic[@"wechat"] isKindOfClass:[NSNull class]]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"wechat"] forKey:@"wechat"];
+                }
+                if (![_myDic[@"userimg"] isKindOfClass:[NSNull class]]) {
+                    //[[NSUserDefaults standardUserDefaults]removeObjectForKey:@"userimg"];
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"userimg"] forKey:@"userimg"];
+                    [self.imageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@%@",HTTPIP,IMAGE_URL,USERIMG]] placeholderImage:[UIImage imageNamed:@"user_role_mng_bookroom_on"]];
+                    
+                    NSLog(@"httpo====%@",[NSString stringWithFormat:@"http://%@%@%@",HTTPIP,IMAGE_URL,USERIMG]);
+                }
+                if (![_myDic[@"id"] isKindOfClass:[NSNull class]]) {
+                    [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"id"] forKey:@"id"];
+                }
+            }
+        }
+    };
+    
+  
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{ [super viewWillDisappear:animated];
+    self.hidesBottomBarWhenPushed=NO;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 8;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    KYUserCell *cell = [tableView dequeueReusableCellWithIdentifier:indentify];
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
+
+    cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
+     cell.lab.font = [UIFont systemFontOfSize:17];
+    if (indexPath.row == 0) {
+        cell.imageview1.image = [UIImage imageNamed:@"setup_person"];
+        cell.lab.text = @"个人中心";
+    }else if(indexPath.row == 1){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_user"];
+        cell.lab.text = @"账户管理";
+    }else if (indexPath.row == 2){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_music"];
+        cell.lab.text = @"音乐收藏";
+    }else if(indexPath.row == 3){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_log"];
+        cell.lab.text = @"日 志";
+    }else if(indexPath.row == 4){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_video"];
+        cell.lab.text = @"监 控";
+    }else if (indexPath.row == 5){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_voice"];
+        cell.lab.text = @"语音助手";
+    }else if(indexPath.row == 6){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_bbs"];
+        cell.lab.text = @" 家庭留言板";
+    }else if(indexPath.row == 7){
+        cell.imageview1.image = [UIImage imageNamed:@"setup_set"];
+        cell.lab.text = @" 设 置";
+    }
+    
+    
+    return cell;
+    
+}
+//}
+
+
+//cell点击事件
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+        if (indexPath.row == 0) {
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething0) object:tableView];
+            [self performSelector:@selector(todoSomething0) withObject:tableView afterDelay:0.2f];
+        } if(indexPath.row == 1){
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething1) object:tableView];
+            [self performSelector:@selector(todoSomething1) withObject:tableView afterDelay:0.2f];
+        } if(indexPath.row == 2){
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething2) object:tableView];
+            [self performSelector:@selector(todoSomething2) withObject:tableView afterDelay:0.2f];
+
+            
+          
+        } if (indexPath.row == 3) {
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething3) object:tableView];
+            [self performSelector:@selector(todoSomething3) withObject:tableView afterDelay:0.2f];
+       
+        }if(indexPath.row == 4){
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething4) object:tableView];
+            [self performSelector:@selector(todoSomething4) withObject:tableView afterDelay:0.2f];
+
+                  } if(indexPath.row == 5){
+                      [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething5) object:tableView];
+                      [self performSelector:@selector(todoSomething5) withObject:tableView afterDelay:0.2f];
+                 } if(indexPath.row == 6){
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething6) object:tableView];
+            [self performSelector:@selector(todoSomething6) withObject:tableView afterDelay:0.2f];
+        }
+    if(indexPath.row == 7){
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(todoSomething7) object:tableView];
+            [self performSelector:@selector(todoSomething7) withObject:tableView afterDelay:0.2f];
+            
+        }
+        
+    
+}
+/*延时操作，避免TableViewCell多次点击触发多次事件*/
+- (void)todoSomething0{
+    KYPersonalCenterViewController *PersonalCenterVc = [[KYPersonalCenterViewController alloc]init];
+    PersonalCenterVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:PersonalCenterVc animated:YES];
+}
+-(void)todoSomething1{
+    KYAccountManageViewController *AccountManageVc = [[KYAccountManageViewController alloc]init];
+    AccountManageVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:AccountManageVc animated:YES];
+
+
+
+}
+-(void)todoSomething2{
+    DemoViewController *vc =[DemoViewController  defaultManager];
+    vc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:vc animated:YES];
+
+
+}
+-(void)todoSomething3{
+    KYOpreationViewController *NoteVc = [[KYOpreationViewController alloc]init];
+    NoteVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:NoteVc animated:YES];
+
+
+}
+-(void)todoSomething4{
+    KYMonitorViewController *MonitorVc = [[KYMonitorViewController alloc]init];
+    MonitorVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:MonitorVc animated:YES];
+
+
+
+}
+-(void)todoSomething5{
+    KYVoiceControlViewController *VoiceControlVc = [[KYVoiceControlViewController alloc]init];
+    VoiceControlVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:VoiceControlVc animated:YES];
+
+
+
+}
+- (void)todoSomething6{
+    KYMessageTableViewController *MessageVc = [[ KYMessageTableViewController alloc]init];
+    MessageVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:MessageVc animated:YES];
+}
+
+- (void)todoSomething7{
+    self.hidesBottomBarWhenPushed=YES;
+    KYSettingViewController*SettingVc = [[KYSettingViewController alloc]init];
+    SettingVc.hidesBottomBarWhenPushed=YES;
+    [self.navigationController pushViewController:SettingVc animated:YES];
+}
+
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+//    return ((self.view.bounds.size.height-160-60) /8 );
+    return h;
+}
+
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
+    [self.UserName resignFirstResponder];
+    [self.UserCode resignFirstResponder];
+    
+    return YES;
+    
+}
+/***********************************更换头像***********************************/
+- (void)changeUserImag
+{
+    UIActionSheet *choiceSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"取消"
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:@"拍照", @"从相册中选取", nil];
+    
+    [choiceSheet showInView:self.view];
+}
+
+#pragma mark UIActionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 0) {
+        // 拍照
+        if ([self isCameraAvailable] && [self doesCameraSupportTakingPhotos]) {
+            UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+            controller.sourceType = UIImagePickerControllerSourceTypeCamera;
+            if ([self isFrontCameraAvailable]) {
+                controller.cameraDevice =  UIImagePickerControllerCameraDeviceRear;
+            }
+            NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+            [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+            controller.mediaTypes = mediaTypes;
+            controller.delegate = self;
+            [self presentViewController:controller
+                               animated:YES
+                             completion:^(void){
+                                 NSLog(@"Picker View Controller is presented");
+                             }];
+        }
+        
+    } else if (buttonIndex == 1) {
+        // 从相册中选取
+        if ([self isPhotoLibraryAvailable]) {
+            UIImagePickerController *controller = [[UIImagePickerController alloc] init];
+            controller.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            NSMutableArray *mediaTypes = [[NSMutableArray alloc] init];
+            [mediaTypes addObject:(__bridge NSString *)kUTTypeImage];
+            controller.mediaTypes = mediaTypes;
+            controller.delegate = self;
+            [self presentViewController:controller
+                               animated:YES
+                             completion:^(void){
+                                 NSLog(@"Picker View Controller is presented");
+                             }];
+        }
+    }
+}
+
+- (void)imageCropper:(VPImageCropperViewController *)cropperViewController didFinished:(UIImage *)editedImage {
+
+    
+    UIImage *iamge =[self compressImage:editedImage];
+
+    
+    [self requestForKeepWithImage:iamge];
+    
+    [cropperViewController dismissViewControllerAnimated:YES completion:^{
+        // TO DO
+    }];
+    _userImag=editedImage;
+   
+}
+- (UIImage *)fixOrientation:(UIImage *)aImage {
+    
+    // No-op if the orientation is already correct
+    if (aImage.imageOrientation == UIImageOrientationUp)
+        return aImage;
+    
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, aImage.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, aImage.size.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+        default:
+            break;
+    }
+    
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, aImage.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        default:
+            break;
+    }
+    
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+    CGContextRef ctx = CGBitmapContextCreate(NULL, aImage.size.width, aImage.size.height,
+                                             CGImageGetBitsPerComponent(aImage.CGImage), 0,
+                                             CGImageGetColorSpace(aImage.CGImage),
+                                             CGImageGetBitmapInfo(aImage.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (aImage.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            // Grr...
+            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.height,aImage.size.width), aImage.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.width,aImage.size.height), aImage.CGImage);
+            break;  
+    }  
+    
+    // And now we just create a new UIImage from the drawing context  
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);  
+    UIImage *img = [UIImage imageWithCGImage:cgimg];  
+    CGContextRelease(ctx);  
+    CGImageRelease(cgimg);  
+    return img;  
+}
+
+- (UIImage *)compressImage:(UIImage *)imgSrc
+{
+    CGSize size = {170 , 170};
+    UIGraphicsBeginImageContext(size);
+    CGRect rect = {{0,0}, size};
+    [imgSrc drawInRect:rect];
+    UIImage *compressedImg = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return compressedImg;
+}
+- (void)imageCropperDidCancel:(VPImageCropperViewController *)cropperViewController {
+    [cropperViewController dismissViewControllerAnimated:YES completion:^{
+    }];
+}
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [picker dismissViewControllerAnimated:YES completion:^() {
+        UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        portraitImg = [self imageByScalingToMaxSize:portraitImg];//这个不加的话，拍照上传照片是倒着的
+        // 裁剪
+        VPImageCropperViewController *imgEditorVC = [[VPImageCropperViewController alloc] initWithImage:portraitImg cropFrame:CGRectMake(0, 100.0f, self.view.frame.size.width, self.view.frame.size.width) limitScaleRatio:3.0 vover:nil];
+        imgEditorVC.delegate = self;
+        [self presentViewController:imgEditorVC animated:YES completion:^{
+            // TO DO
+        }];
+    }];
+    
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:^(){
+    }];
+}
+
+#pragma mark - UINavigationControllerDelegate
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+}
+
+- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    
+}
+
+#pragma mark camera utility
+- (BOOL) isCameraAvailable{
+    return [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+}
+
+- (BOOL) isRearCameraAvailable{
+    return [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear];
+}
+
+- (BOOL) isFrontCameraAvailable {
+    return [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront];
+}
+
+- (BOOL) doesCameraSupportTakingPhotos {
+    return [self cameraSupportsMedia:(__bridge NSString *)kUTTypeImage sourceType:UIImagePickerControllerSourceTypeCamera];
+}
+
+- (BOOL) isPhotoLibraryAvailable{
+    return [UIImagePickerController isSourceTypeAvailable:
+            UIImagePickerControllerSourceTypePhotoLibrary];
+}
+- (BOOL) canUserPickVideosFromPhotoLibrary{
+    return [self
+            cameraSupportsMedia:(__bridge NSString *)kUTTypeMovie sourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+- (BOOL) canUserPickPhotosFromPhotoLibrary{
+    return [self
+            cameraSupportsMedia:(__bridge NSString *)kUTTypeImage sourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+
+- (BOOL) cameraSupportsMedia:(NSString *)paramMediaType sourceType:(UIImagePickerControllerSourceType)paramSourceType{
+    __block BOOL result = NO;
+    if ([paramMediaType length] == 0) {
+        return NO;
+    }
+    NSArray *availableMediaTypes = [UIImagePickerController availableMediaTypesForSourceType:paramSourceType];
+    [availableMediaTypes enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *mediaType = (NSString *)obj;
+        if ([mediaType isEqualToString:paramMediaType]){
+            result = YES;
+            *stop= YES;
+        }
+    }];
+    return result;
+}
+
+
+
+
+//保存修改
+-(void)requestForKeepWithImage:(UIImage*)image{
+    NSString *fileName =@"userimg.png";
+    
+    
+    NSString *urlstring =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    NSString *myrequestStr = [NSString stringWithFormat:@"{\"funcode\":\"10212\",\"userid\":\"%@\",\"actuserid\":\"%@\"}",USER_ID,USER_ID];
+    
+    NSData *data =UIImagePNGRepresentation([self compressImage:image]);
+    
+    NSURL* myurl = [NSURL URLWithString:urlstring];
+    ASIFormDataRequest* request = [ASIFormDataRequest requestWithURL:myurl];
+    request.delegate = self;
+    request.tag=1999;
+    [request setTimeOutSeconds:8];
+    [request setPostValue:myrequestStr forKey:@"jsonrequest"];
+   // [request addPostValue:USER_ID forKey:@"userid"];
+    
+    [request setData:data withFileName:fileName andContentType:@"image/png" forKey:@"file"];
+    [request startAsynchronous];
+    
+    
+}
+
+//开始上传
+- (void)requestStarted:(ASIHTTPRequest *)request
+{
+    [SVProgressHUD showWithStatus:@"开始上传..."];
+}
+
+//上传完成
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSData *data = request.responseData;
+//    NSLog(@"data========%@",data);
+    
+    NSMutableDictionary *dict =[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+//    NSLog(@"asdfvadhsgfsd====%@",dict);
+    
+    if (request.tag == 1999) {
+        if ([[dict objectForKey:@"SS"] integerValue]==200) {
+            
+            [SVProgressHUD showSuccessWithStatus:dict[@"MSG"]];
+            NSLog(@"444444");
+                self.imageView.image =_userImag;//            [self request];
+//            [self.imageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@%@",HTTPIP,IMAGE_URL,USERIMG]] placeholderImage:[UIImage imageNamed:@"user_role_mng_bookroom_on"]];
+            //[self.navigationController popViewControllerAnimated:YES];
+        }else{
+            [SVProgressHUD showErrorWithStatus:dict[@"MSG"]];
+            
+        }
+        
+    }
+}
+//上传失败
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [SVProgressHUD dismiss];
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"小提示" message:@"您的网络情况不太好~😰" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+    alert.tag = 7788;
+    [alert show];
+}
+
+
+
+
+#pragma mark image scale utility
+- (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage {
+    if (sourceImage.size.width < ORIGINAL_MAX_WIDTH) return sourceImage;
+    CGFloat btWidth = 0.0f;
+    CGFloat btHeight = 0.0f;
+    if (sourceImage.size.width > sourceImage.size.height) {
+        btHeight = ORIGINAL_MAX_WIDTH;
+        btWidth = sourceImage.size.width * (ORIGINAL_MAX_WIDTH / sourceImage.size.height);
+    } else {
+        btWidth = ORIGINAL_MAX_WIDTH;
+        btHeight = sourceImage.size.height * (ORIGINAL_MAX_WIDTH / sourceImage.size.width);
+    }
+    CGSize targetSize = CGSizeMake(btWidth, btHeight);
+    return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
+}
+
+- (UIImage *)imageByScalingAndCroppingForSourceImage:(UIImage *)sourceImage targetSize:(CGSize)targetSize {
+    UIImage *newImage = nil;
+    CGSize imageSize = sourceImage.size;
+    CGFloat width = imageSize.width;
+    CGFloat height = imageSize.height;
+    CGFloat targetWidth = targetSize.width;
+    CGFloat targetHeight = targetSize.height;
+    CGFloat scaleFactor = 0.0;
+    CGFloat scaledWidth = targetWidth;
+    CGFloat scaledHeight = targetHeight;
+    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
+    {
+        CGFloat widthFactor = targetWidth / width;
+        CGFloat heightFactor = targetHeight / height;
+        
+        if (widthFactor > heightFactor)
+            scaleFactor = widthFactor; // scale to fit height
+        else
+            scaleFactor = heightFactor; // scale to fit width
+        scaledWidth  = width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+        
+        // center the image
+        if (widthFactor > heightFactor)
+        {
+            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+        }
+        else
+            if (widthFactor < heightFactor)
+            {
+                thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+            }
+    }
+    UIGraphicsBeginImageContext(targetSize); // this will crop
+    CGRect thumbnailRect = CGRectZero;
+    thumbnailRect.origin = thumbnailPoint;
+    thumbnailRect.size.width  = scaledWidth;
+    thumbnailRect.size.height = scaledHeight;
+    
+    [sourceImage drawInRect:thumbnailRect];
+    
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    if(newImage == nil) NSLog(@"could not scale image");
+    
+    //pop the context to get back to the default
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+@end

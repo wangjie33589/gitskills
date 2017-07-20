@@ -1,0 +1,146 @@
+//
+//  handelVC.m
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+#define NOTI_CENTER [NSNotificationCenter defaultCenter]
+#import "handelVC.h"
+
+
+@interface handelVC ()<UITextViewDelegate>
+
+@end
+
+@implementation handelVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+   // self.view.backgroundColor=[UIColor redColor];
+   
+    [self configView];
+//    [NOTI_CENTER addObserver:self selector:@selector(keyboardChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    //注册通知,监听键盘出现
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(handleKeyboardDidShow:)
+                                                name:UIKeyboardDidShowNotification
+                                              object:nil];
+    //注册通知，监听键盘消失事件
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(handleKeyboardDidHidden)
+                                                name:UIKeyboardDidHideNotification
+                                              object:nil];
+    [super viewWillAppear:YES];
+}
+- (void)handleKeyboardDidShow:(NSNotification*)paramNotification
+{
+    //获取键盘高度
+    NSValue *keyboardRectAsObject=[[paramNotification userInfo]objectForKey:UIKeyboardFrameEndUserInfoKey];
+    
+    CGRect keyboardRect;
+    [keyboardRectAsObject getValue:&keyboardRect];
+    
+   _complete.contentInset=UIEdgeInsetsMake(0, 0,keyboardRect.size.height-200, 0);
+}
+
+- (void)handleKeyboardDidHidden
+{
+    _complete.contentInset=UIEdgeInsetsZero;
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+
+
+    [self.view endEditing:YES];
+
+}
+
+-(void)configView{
+      detilModel *model =self.dataARR[0];
+    NSLog(@"node%@",model);
+    _firstLab.text=[NSString stringWithFormat:@"任务名称：%@",model.title];
+    _secondLab.text=[NSString stringWithFormat:@"分配人：%@  %@",model.mangerName,model.mangeTime];
+    _ThirdLab.text=[NSString stringWithFormat:@"计划时间：%@",model.FPetime];
+
+    _content.text= model.Fcontent;
+
+
+
+}
+
+-(id)initWithDataSourse:(NSMutableArray *)arr{
+    
+    
+    self =[super init];
+    if (self) {
+//        self.detilmodel=model;
+//        NSLog(@"model==%@",model);
+        self.dataARR =arr;
+        NSLog(@"___DATA===%@",self.dataARR);
+        
+        
+       
+        
+    }
+    
+    return self;
+}
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+
+    _completView.frame = CGRectMake(52, 200, 310, 130);
+    _complete.frame=CGRectMake(0, 0, 310, 130);
+    
+    return YES;
+
+}
+- (void)textViewDidBeginEditing:(UITextView *)textView{
+    NSLog(@"1234");
+
+
+}
+
+
+#pragma mark- notiMethod
+//- (void)keyboardChangeFrame:(NSNotification *)noti{
+   // NSLog(@"%@",noti.userInfo);
+    
+//    //从通知中取出动画速率
+//    int curve = [[noti.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+//    //取出动画时间
+//    float duration = [[noti.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
+//    //取出键盘动画结束后键盘的frame
+//    CGRect endFrame = [[noti.userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+//    
+//    [UIView animateWithDuration:duration animations:^{
+//        [UIView setAnimationCurve:curve];
+//         _completView.frame = CGRectMake(52, endFrame.origin.y-300, 310, 130);//        _table.frame = CGRectMake(0, 0, self.view.bounds.size.width, _inputView.frame.origin.y);
+//    }];
+//    
+//}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

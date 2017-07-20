@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="Maintain_detil_VC">
+            <connections>
+                <outlet property="mySeg" destination="BxG-qg-IIP" id="U7s-s4-CvU"/>
+                <outlet property="myTable" destination="wBb-Tt-bij" id="Iy0-jI-Pxl"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wBb-Tt-bij">
+                    <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yn8-VK-nTz">
+                    <rect key="frame" x="0.0" y="64" width="320" height="30"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.75363879504504505" green="0.75363879504504505" blue="0.75363879504504505" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="TcE-Ds-YaK"/>
+                    </constraints>
+                    <state key="normal" title=" 新增维修记录">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="btnClick:" destination="-1" eventType="touchUpInside" id="7Dh-CO-bV6"/>
+                    </connections>
+                </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="BxG-qg-IIP">
+                    <rect key="frame" x="0.0" y="93" width="320" height="29"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="28" id="Ocs-Pr-Ffg"/>
+                    </constraints>
+                    <segments>
+                        <segment title="待确认"/>
+                        <segment title="已确认"/>
+                    </segments>
+                    <connections>
+                        <action selector="segControl:" destination="-1" eventType="valueChanged" id="cKD-2x-z9j"/>
+                    </connections>
+                </segmentedControl>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="wBb-Tt-bij" secondAttribute="bottom" id="93a-sN-bqa"/>
+                <constraint firstItem="Yn8-VK-nTz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="D5s-gc-ZDV"/>
+                <constraint firstItem="BxG-qg-IIP" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="93" id="JWh-jy-Phf"/>
+                <constraint firstItem="wBb-Tt-bij" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="LaK-JU-TcR"/>
+                <constraint firstAttribute="trailing" secondItem="BxG-qg-IIP" secondAttribute="trailing" id="Zd5-MV-3o8"/>
+                <constraint firstItem="Yn8-VK-nTz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="cQL-39-uu4"/>
+                <constraint firstItem="BxG-qg-IIP" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="n0G-Qj-xqC"/>
+                <constraint firstAttribute="trailing" secondItem="wBb-Tt-bij" secondAttribute="trailing" id="naz-3m-G3e"/>
+                <constraint firstItem="wBb-Tt-bij" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sp1-sN-Ecz"/>
+                <constraint firstAttribute="trailing" secondItem="Yn8-VK-nTz" secondAttribute="trailing" id="usI-I9-Hs3"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="347" y="111"/>
+        </view>
+    </objects>
+</document>

@@ -1,0 +1,392 @@
+//
+//  LoginViewController.m
+//  SyncSmartHome
+//
+//  Created by SciyonSoft_WangJie on 16/5/3.
+//  Copyright © 2016年 sciyonSoft. All rights reserved.
+//
+
+#import "LoginViewController.h"
+#import "HomeViewController.h"
+#import "SenceViewController.h"
+#import "DeviceViewController.h"
+#import "UserViewController.h"
+#import "MyRequest.h"
+#import "MyMD5.h"
+#import "ForgetPwdViewController.h"
+#import "LeftViewController.h"
+#import "KYSetGatewayViewController.h"
+@interface LoginViewController ()<UITextFieldDelegate>{
+    
+    UITextField *paswwordTXT;
+    UITextField *YZMtxt;
+    UITextField *Userfield;
+    
+    //    UIButton *_forgetBtn;
+    UIButton *YZMbtn;
+    NSTimer *timer;
+    int i;
+    BOOL isClick;
+    UIButton *remanberBtn;
+    BOOL isRemanber;
+    
+    BOOL issuccess;
+    UILabel *_lab;
+    UILabel *_tobLab;
+    
+    NSDictionary *_myDic;
+    NSMutableArray *_myArray;
+    
+    NSMutableArray *roleServerid;
+    UIView *view;
+    UIView *_bgView;
+}
+
+@end
+
+
+
+@implementation LoginViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // Do any additional setup after loading the view.
+    // [[NSUserDefaults standardUserDefaults]setObject:LOCAL_SERVIER forKey:@"http"];
+    
+    //
+    //    if ([HTTPIP isEqualToString:CLOULD_SERVIER]) {
+    //
+    //       //[[NSUserDefaults standardUserDefaults]setObject:LOCAL_SERVIER forKey:@"http"];
+    //    }else{
+    //        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"http"];
+    //       [[NSUserDefaults standardUserDefaults]setObject:LOCAL_SERVIER forKey:@"http"];
+    //
+    //
+    //    }
+    
+    
+   _bgView=[[UIView alloc]initWithFrame:self.view.bounds];
+    [self.view addSubview:_bgView];
+    
+    view =[[UIView alloc]initWithFrame:CGRectMake(30,300,(LWidth-60), 40)];
+    
+    UIImageView *viewBgImgview =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
+    viewBgImgview.image=[UIImage imageNamed:@"frame"];
+    [view addSubview:viewBgImgview];
+    
+    
+    //view.backgroundColor=[UIColor whiteColor];
+    view.layer.masksToBounds = YES;
+    view.layer.cornerRadius = 5;
+    [_bgView addSubview:view];
+    UIImageView *logoimageView =[[UIImageView alloc]initWithFrame:CGRectMake((LWidth-100)/2, view.frame.origin.y-200, 100, 100)];
+    logoimageView.image =[UIImage imageNamed:@"login_logo"];
+    [_bgView addSubview:logoimageView];
+    
+    
+    
+    UIImageView *iView =[[UIImageView alloc]initWithFrame:CGRectMake(3, 6, 32,28)];
+    iView.image=[UIImage imageNamed:@"new_user"];
+    [view addSubview:iView];
+    Userfield =[[UITextField alloc]initWithFrame:CGRectMake(45, 0, 260-40, 40)];
+    Userfield.textColor=[UIColor whiteColor];
+    Userfield.placeholder=@"请输入用户名";
+    Userfield.returnKeyType=UIReturnKeyDone;
+    Userfield.delegate=self;
+    
+    [view addSubview:Userfield];
+    UIView *passwordView  =[[UIView alloc]initWithFrame:CGRectMake(30, 300+40+20,LWidth-60, 40)];
+    UIImageView *passBgImgview =[[UIImageView alloc]initWithFrame:CGRectMake(0, 0, view.frame.size.width, view.frame.size.height)];
+    passBgImgview.image=[UIImage imageNamed:@"frame"];
+    [passwordView addSubview:passBgImgview];
+    
+    UIImageView *imgview =[[UIImageView alloc]initWithFrame:CGRectMake(3, 6, 32,28)];
+    imgview.image=[UIImage imageNamed:@"password"];
+    
+    passwordView.layer.masksToBounds = YES;
+    passwordView.layer.cornerRadius = 5;
+    [_bgView addSubview:passwordView];
+    paswwordTXT =[[UITextField alloc]initWithFrame:CGRectMake(45, 0, 260, 40)];
+    paswwordTXT.textColor= [UIColor whiteColor];
+    paswwordTXT.delegate=self;
+    paswwordTXT.secureTextEntry=YES;
+    paswwordTXT.returnKeyType=UIReturnKeyDone;
+    [passwordView addSubview:imgview];
+    paswwordTXT.placeholder=@"请输入密码";
+    //passwordView.backgroundColor=[UIColor whiteColor];
+    [passwordView addSubview:paswwordTXT];
+    
+    UIButton *loginBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    loginBtn.frame=CGRectMake(30, passwordView.frame.origin.y+80, LWidth-60, 40) ;
+    loginBtn.backgroundColor=[CommonTool colorWithHexString:@"#D3E9F6"];
+    [loginBtn setTitleColor:[CommonTool colorWithHexString:@"#5BB2EB"] forState:0];
+    [loginBtn setTitle:@"登 录" forState:0];
+    loginBtn.layer.cornerRadius=10.0;
+    [loginBtn addTarget:self action:@selector(loginBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [_bgView addSubview:loginBtn];
+    
+    
+    //忘记密码
+    
+    UIButton *forgetBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    forgetBtn.frame=CGRectMake(LWidth/2,LHeight-80,100,40) ;
+    //    loginBtn.backgroundColor=[UIColor blueColor];
+    [forgetBtn setTitleColor:[CommonTool colorWithHexString:@"#D3E9F6"] forState:0];
+    [forgetBtn setTitle:@"忘记密码" forState:0];
+    [forgetBtn addTarget:self action:@selector(forgetBtn:) forControlEvents:UIControlEventTouchUpInside];
+    forgetBtn.titleLabel.textAlignment=NSTextAlignmentLeft;
+    
+    [_bgView addSubview:forgetBtn];
+    //    [self successLogin];
+    //切换网关
+    UILabel *label =[[UILabel alloc]initWithFrame:CGRectMake(LWidth/2-1, LHeight-80, 2, 35)];
+    label.backgroundColor=[CommonTool colorWithHexString:@"#D3E9F6"];
+    [_bgView addSubview:label];
+    UIButton *ChangeIPBtn =[UIButton buttonWithType:UIButtonTypeCustom];
+    ChangeIPBtn.frame=CGRectMake(LWidth/2-100, LHeight-80,100,40) ;
+    //    loginBtn.backgroundColor=[UIColor blueColor];
+    [ChangeIPBtn setTitleColor:[CommonTool colorWithHexString:@"#D3E9F6"] forState:0];
+    [ChangeIPBtn setTitle:@"网关设置" forState:0];
+    ChangeIPBtn.titleLabel.textAlignment=NSTextAlignmentRight;
+    [ChangeIPBtn addTarget:self action:@selector(ChangeIPBtn) forControlEvents:UIControlEventTouchUpInside];
+    [_bgView addSubview:ChangeIPBtn];
+    
+    
+    roleServerid= [[NSMutableArray alloc]init];
+}
+-(void)ChangeIPBtn{
+    
+    KYSetGatewayViewController *vc =[[KYSetGatewayViewController alloc]init];
+    UINavigationController *nav =[[UINavigationController alloc]initWithRootViewController:vc];
+    [self presentViewController:nav animated:YES completion:nil];
+
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField{
+    
+    if (IPHONE_5) {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:.3];
+        
+        _bgView.frame=CGRectMake(0,-80,LWidth,LHeight) ;
+        [UIView commitAnimations];
+
+    }else{
+        return;
+    }
+   
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+
+{
+    if (IPHONE_5) {
+          _bgView.frame =CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    }
+  
+    
+}
+
+- (void)forgetBtn:(UIButton *)button{
+    ForgetPwdViewController *vc = [[ForgetPwdViewController alloc]init];
+    UINavigationController *nav =[[UINavigationController alloc]initWithRootViewController:vc];
+    //
+    //    ForgetPwdViewController *vc = [[ForgetPwdViewController alloc] initWithNibName:@"ForgetPwdViewController" bundle:[NSBundle mainBundle]];
+    //
+    
+    
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:1];
+    
+    
+    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:window cache:YES];
+    [UIView commitAnimations];
+    
+    window.rootViewController = nav;
+    
+    NSLog(@"----");
+    
+}
+
+
+-(void)loginBtn:(UIButton*)button{
+    
+    [self requestToLogin];
+    
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:.3];
+    
+    _bgView.frame=CGRectMake(0,0,LWidth,LHeight) ;
+    [UIView commitAnimations];
+    
+
+    
+    [textField resignFirstResponder];
+    
+    if (textField==paswwordTXT) {
+        if ([textField.text isEqualToString:@""]) {
+            
+        }
+    }
+    
+    return YES;
+    
+    
+    
+}
+
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (![Userfield isExclusiveTouch]) {
+        [Userfield resignFirstResponder];
+    }
+    if (![paswwordTXT isExclusiveTouch]) {
+        [paswwordTXT resignFirstResponder];
+    }
+}
+
+-(void)requestToLogin{
+    
+    if ([Userfield.text isEqualToString:@""]) {
+        [SVProgressHUD showErrorWithStatus:@"用户名不能为空"];
+        
+        return;
+    }
+    if ([paswwordTXT.text isEqualToString:@""]) {
+        [SVProgressHUD showErrorWithStatus:@"密码不能为空"];
+        
+        return;
+    }
+    NSString *pass =paswwordTXT.text;
+    NSString *newpasds =[pass stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *user=Userfield.text;
+    NSString *newUsers =[user  stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSString *firstMd5=[MyMD5 md5:newpasds];
+    NSString *secondMD5=[MyMD5 md5:firstMd5];
+    NSString *lastMD5=[MyMD5 md5:secondMD5];
+    NSString *muUrl =[NSString stringWithFormat:@"http://%@",HTTPIP];
+    
+    NSLog(@"sdghsghdgshgdh======%@",muUrl);
+    NSString *urlstring=[NSString stringWithFormat:@"{\"funcode\":\"10101\",\"code\":\"%@\",\"pwd\":\"%@\"}",newUsers,lastMD5];
+    NSDictionary *dict =[NSDictionary dictionaryWithObjectsAndKeys:urlstring,@"jsonrequest", nil];
+    NSLog(@"dict======%@",dict);
+    MyRequest *manager = [MyRequest requestWithURL:muUrl withParameter:dict];
+    [SVProgressHUD showWithStatus:@"正在登录..."];
+    
+    //manager.delegate = self;
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        [SVProgressHUD showSuccessWithStatus:@"登录成功"];
+        if ([[dictt objectForKey:@"SS"] integerValue]==200) {
+            // dictt[@"DATA"][0]
+            _myDic=dictt[@"DATA"];
+            _myArray=_myDic[@"role"];
+            
+            NSLog(@"ddd====%@",_myDic[@"usercode"]);
+            //        NSLog(@"%@---66",_myArray[i][@"serverid"]);
+            NSLog(@"这是userimg--%@",_myDic[@"userimg"]);
+            [self successLogin];
+            [[NSUserDefaults standardUserDefaults] setObject:lastMD5 forKey:@"pwd"];
+            [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"usercode"] forKey:@"usercode"];
+            [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"username"] forKey:@"username"];
+            if (![_myDic[@"phonenumber"] isKindOfClass:[NSNull class]]) {
+                [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"phonenumber"] forKey:@"phonenumber"];
+            }
+            
+            [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"wechat"] forKey:@"wechat"];
+            [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"userstatus"] forKey:@"userstatus"];
+            [[NSUserDefaults standardUserDefaults] setObject:_myDic[@"id"] forKey:@"id"];
+            NSLog(@"%@__%@__%@---",_myDic[@"id"],_myDic[@"phonenumber"],_myDic[@"usercode"]);
+            NSLog(@"%@----",dictt[@"SERVERID"]);
+            
+            [[NSUserDefaults standardUserDefaults] setObject:@"success" forKey:@"login"];
+            [[NSUserDefaults standardUserDefaults] setObject:_myArray[i][@"serverid"] forKey:@"serverid"];//SERVERID
+            NSLog(@"取角色名和serverid---%@--",_myArray[i][@"serverid"]);
+            NSSet *set = [NSSet setWithObject:_myArray[i][@"serverid"]];
+            NSLog(@"set----------%@-----8",[set allObjects]);
+            //            roleServerid = [NSArray ]
+            [roleServerid addObject:[set allObjects]];
+            
+            NSString *roleServeridstr = [NSString stringWithFormat:@"%d",roleServerid.count];
+            NSLog(@"roleServerid------%@----%@-----%d",roleServeridstr,roleServerid,roleServerid.count);
+            [[NSUserDefaults standardUserDefaults] setObject:roleServeridstr forKey:@"serveridstr"];
+            //存储cookie
+            
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+    };
+    
+}
+
+
+- (void)successLogin
+{
+    UIStoryboard *story1 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    HomeViewController *homeVC = [story1 instantiateViewControllerWithIdentifier:@"HomeViewController"];
+    UIStoryboard *story2 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    SenceViewController *taskVC = [story2 instantiateViewControllerWithIdentifier:@"SenceViewController"];
+    UIStoryboard *story3 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    DeviceViewController *productionVC = [story3 instantiateViewControllerWithIdentifier:@"DeviceViewController"];
+    UIStoryboard *story4 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UserViewController *userVC = [story4 instantiateViewControllerWithIdentifier:@"UserViewController"];
+    
+    UINavigationController * Nav1 = [[UINavigationController alloc] initWithRootViewController:homeVC];
+    Nav1.tabBarItem.title = @"首页";
+    //    theNavigationController.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);//纠正图片位置
+    [Nav1.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav1.tabBarItem.image = [UIImage imageNamed:@"sy_1"];
+    Nav1.tabBarItem.selectedImage = [[UIImage imageNamed:@"sy"]imageWithRenderingMode:
+                                     UIImageRenderingModeAlwaysOriginal];
+    
+    UINavigationController * Nav2 = [[UINavigationController alloc] initWithRootViewController:productionVC];
+    //    Nav2.tabBarItem.title = @"场景";
+    //    [Nav2.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    //    Nav2.tabBarItem.image = [UIImage imageNamed:@"sw_1"];
+    //    Nav2.tabBarItem.selectedImage = [[UIImage imageNamed:@"sw"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    Nav2.tabBarItem.title = @"设备";
+    [Nav2.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav2.tabBarItem.image = [UIImage imageNamed:@"device"];
+    Nav2.tabBarItem.selectedImage = [[UIImage imageNamed:@"device_1"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UINavigationController * Nav3 = [[UINavigationController alloc] initWithRootViewController:taskVC];
+    
+    Nav3.tabBarItem.title = @"场景";
+    [Nav3.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav3.tabBarItem.image = [UIImage imageNamed:@"sence"];
+    Nav3.tabBarItem.selectedImage = [[UIImage imageNamed:@"scene_1"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UINavigationController * Nav4 = [[UINavigationController alloc] initWithRootViewController:userVC];
+    Nav4.tabBarItem.title =@"我的";
+    [Nav4.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav4.tabBarItem.image = [UIImage imageNamed:@"mine"];
+    Nav4.tabBarItem.selectedImage = [[UIImage imageNamed:@"mine_1"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    AppDelegate *aAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    aAppDelegate.tabBarCtr = [[UITabBarController alloc]init];
+    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:0/255.0 green:149/255.0 blue:255/255.0 alpha:1]];
+    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
+    //        [[UITabBar appearance] setBackgroundImage:[ConFunc createImageWithColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
+    //                                                                           size:CGSizeMake(LWidth,48)]];//设置背景，修改颜色是没有用的 
+    aAppDelegate.tabBarCtr.viewControllers = @[Nav1,Nav2,Nav3,Nav4];
+    aAppDelegate.tabBarCtr.selectedIndex = 0;
+    [aAppDelegate.ddMenu showLeftController:YES];
+    UIStoryboard *story5 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LeftViewController *leftVC = [story5 instantiateViewControllerWithIdentifier:@"LeftViewController"];
+    leftVC.delegate = (id)homeVC;
+    leftVC.delegatePush = (id)homeVC;
+    leftVC.delegateFunction = (id)productionVC;
+    UINavigationController * leftNav = [[UINavigationController alloc] initWithRootViewController:leftVC];
+    aAppDelegate.ddMenu = [[DDMenuController alloc] initWithRootViewController:aAppDelegate.tabBarCtr];
+    aAppDelegate.ddMenu.leftViewController = leftNav;
+    aAppDelegate.window.rootViewController = aAppDelegate.ddMenu;
+    
+}
+
+@end

@@ -1,0 +1,25 @@
+//
+//  confirmVC.h
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface confirmVC : UIViewController
+-(id)initWithDataSourse:(NSMutableArray *)arr;
+@property(nonatomic,retain)NSMutableArray *dataARR;
+
+@property (weak, nonatomic) IBOutlet UILabel *firstLab;
+@property (weak, nonatomic) IBOutlet UILabel *secondfLab;
+@property (weak, nonatomic) IBOutlet UILabel *ThirdLab;
+@property (weak, nonatomic) IBOutlet UILabel *fourLab;
+@property (weak, nonatomic) IBOutlet UITextView *contentView;
+
+
+
+
+
+@end

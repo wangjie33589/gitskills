@@ -1,0 +1,370 @@
+//
+//  scheduleTableView.m
+//  Proxy_ios
+//
+//  Created by E-Bans on 15/11/26.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import "scheduleTableView.h"
+#import "ScheduleTableViewCell.h"
+
+@implementation scheduleTableView
+
+- (id)initWithModel:(NSDictionary *)data guid:(NSString *)guidStr 
+{
+    self = [super init];
+    if (self) {
+        guid = guidStr;
+        dataDict = [NSDictionary dictionaryWithDictionary:data];
+    }
+    return self;
+}
+- (void)drawRect:(CGRect)rect {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchClick) name:@"change" object:nil];
+    showArray = [[NSMutableArray alloc] init];
+    contenTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    contenTableView.delegate = self;
+    contenTableView.dataSource = self;
+    contenTableView.sectionHeaderHeight = 30.0f;
+    contenTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [contenTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [self addSubview:contenTableView];
+    [self requestShowDataNews];
+}
+- (void)switchClick
+{
+    [showArray removeAllObjects];
+    showArray = [[NSMutableArray alloc] init];
+    [alert_View removeFromSuperview];
+    [self requestShowDataNews];
+}
+- (void)requestShowDataNews
+{
+    [SVProgressHUD showWithStatus:@"努力加载中..."];
+    title = @"";
+    [isShowArray removeAllObjects];
+    isShowArray = [[NSMutableArray alloc] init];
+
+    for (NSInteger index = 0; index < [[[dataDict objectForKey:@"AppDb"] objectForKey:@"R"] count]; index ++) {
+        if ([[[[[dataDict objectForKey:@"AppDb"] objectForKey:@"R"] objectAtIndex:index] objectForKey:@"APPDBFIELDSHOW"] isEqualToString:@"true"]) {
+            [isShowArray addObject:[[[dataDict objectForKey:@"AppDb"] objectForKey:@"R"] objectAtIndex:index]];
+        }
+    }
+    for (NSInteger index = 0; index < [isShowArray count]; index ++) {
+        if (index == 0) {
+            if ([[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDLABEL"]==nil||[[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDLABEL"] isEqual:[NSNull null]]) {
+            }else{
+                title = [[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDLABEL"];
+            }
+        }else{
+            if ([[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDLABEL"]==nil||[[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDLABEL"] isEqual:[NSNull null]]) {
+                title = [NSString stringWithFormat:@"%@,%@",title,@""];
+            }else{
+                title = [NSString stringWithFormat:@"%@,%@",title,[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDLABEL"]];
+            }
+        }
+    }
+    //获取明细数据
+    
+    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:[dataDict objectForKey:@"AppDbConn"],@"APPDBCONN",@"GETDETAILFLOWDATA",@"Action",[dataDict objectForKey:@"AppDbTable"],@"APPDBTABLE",guid,@"GUID",[dataDict objectForKey:@"AppFlowField"],@"APPFLOWFIELD", nil];
+    MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@%@/%@",HTTPIP,SLRD,MOBILE_URL] withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if ([[dictt objectForKey:@"success"] integerValue] == 1) {
+            if ([dictt objectForKey:@"Data"] == nil || [[dictt objectForKey:@"Data"] isEqual:[NSNull null]]) {
+            }else{
+                if ([[[dictt objectForKey:@"Data"] objectForKey:@"R"] isKindOfClass:[NSDictionary class]]) {
+                    [showArray addObject:[[dictt objectForKey:@"Data"] objectForKey:@"R"]];
+                }else{
+                    showArray = [NSMutableArray arrayWithArray:[[dictt objectForKey:@"Data"] objectForKey:@"R"]];
+                }
+            }
+            [contenTableView reloadData];
+            [SVProgressHUD dismiss];
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+    };
+    [SVProgressHUD dismiss];
+}
+#pragma mark ------- 表代理
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    
+    
+    CGRect rect = [title boundingRectWithSize:CGSizeMake(LWidth-20, LHeight)//限制最大的宽度和高度
+                                      options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading  | NSStringDrawingUsesLineFragmentOrigin//采用换行模式
+                                   attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]}
+                                      context:nil];
+    return rect.size.height+5;
+    
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    //    区头View
+    
+    //自动换行输出
+    UIView *sectionView =[[UIView alloc]init];
+    sectionView.backgroundColor = [UIColor whiteColor];
+    
+    
+    
+    
+    
+    
+    UILabel* sectionLable = [[UILabel alloc] init];
+    sectionLable.textColor = [UIColor colorWithRed:95/255.0 green:95/255.0 blue:95/255.0 alpha:1];
+    
+    NSLog(@"title======%@",title);
+    sectionLable.font=[UIFont systemFontOfSize:14];
+    
+    CGRect rect = [title boundingRectWithSize:CGSizeMake(LWidth-20, LHeight)//限制最大的宽度和高度
+                                      options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading  | NSStringDrawingUsesLineFragmentOrigin//采用换行模式
+                                   attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]}
+                                      context:nil];
+    sectionLable.text = title;
+    sectionLable.numberOfLines=0
+    ;
+    sectionLable.backgroundColor = [UIColor clearColor];
+    sectionLable.textAlignment = NSTextAlignmentLeft;
+    sectionLable.frame=CGRectMake(8, 0, LWidth-16, rect.size.height);
+    
+    [sectionView addSubview:sectionLable];
+    sectionView.frame=CGRectMake(0, 0, LWidth, rect.size.height+5);
+    
+    UIImageView* imagvA = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dividing-line"]];
+    imagvA.frame = CGRectMake(0, 29, LWidth, 1);
+    imagvA.alpha = 0.5;
+    [sectionView addSubview:imagvA];
+    return sectionView;
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return showArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellStr = @"CellIdentifier";
+    ScheduleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellStr];
+    if(cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ScheduleTableViewCell" owner:nil options:nil];
+        for (id oneObject in nib)
+        {
+            if ([oneObject isKindOfClass:[ScheduleTableViewCell class]])
+            {
+                cell = (ScheduleTableViewCell *)oneObject;
+            }
+        }
+    }
+    NSString* str = nil;
+    
+    
+    
+    ///mark 改过
+    
+    
+    for (NSInteger index = 0; index < [isShowArray count]; index ++) {
+        if (index == 0) {
+            str = [NSString stringWithFormat:@"%@",[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:0] objectForKey:@"APPDBFIELDNAME"]]];
+        }else if(index ==1){
+            
+            
+            
+            
+            if ([showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]] == nil || [[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]] isEqualToString:@""] || [[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]] isEqual:[NSNull null]]) {
+            }else{
+                NSString *strNEW=  [showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]];
+                
+                //                NSString *str=[showDictD objectForKey:[showMainArray[m] objectForKey:@"APPDBFIELDNAME"]];
+                if ([strNEW containsString:@"."]) {
+                    //  格式化
+                    //                    NSInteger a=[[showMainArray[m] objectForKey:@"APPDBFIELDFORMAT"]length]-2;
+                    NSInteger a =[[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDFORMAT"]length]-2;
+                    
+                    
+                    float b =[strNEW floatValue];
+                    switch (a) {
+                        case 1:
+                        {
+                            str = [NSString stringWithFormat:@"%@，%@",str,[NSString stringWithFormat:@"%.1f",b]];
+                            //contens.text =;
+                            
+                        }
+                            
+                        case 2:
+                        {
+                            str = [NSString stringWithFormat:@"%@，%@",str,[NSString stringWithFormat:@"%.2f",b]];
+                            
+                        }
+                            break;
+                        case 3:
+                        {
+                            str = [NSString stringWithFormat:@"%@，%@",str,[NSString stringWithFormat:@"%.3f",b]];
+                        }
+                            break;
+                        case 4:
+                        {
+                            str = [NSString stringWithFormat:@"%@，%@",str,[NSString stringWithFormat:@"%.4f",b]];
+                        }
+                            break;
+                            
+                        case 5:
+                        {  str = [NSString stringWithFormat:@"%@，%@",str,[NSString stringWithFormat:@"%.5f",b]];
+                            
+                        }
+                            break;
+                            
+                            
+                    }
+                    
+                    
+                }else{
+                    str = [NSString stringWithFormat:@"%@，%@",str,[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]]];
+                
+                
+                }
+
+                
+            }
+        }
+        
+        
+        else{
+            if ([showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]] == nil || [[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]] isEqualToString:@""] || [[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]] isEqual:[NSNull null]]) {
+            }else{
+                str = [NSString stringWithFormat:@"%@，%@",str,[showArray[indexPath.row] objectForKey:[[isShowArray objectAtIndex:index] objectForKey:@"APPDBFIELDNAME"]]];
+            }
+        }
+    }
+    
+    cell.title.text = str;
+    CGSize size = [self sizeWithString:cell.title.text font:cell.title.font];
+    cell.title.frame = CGRectMake(20, 9, LWidth-20, size.height);
+    cell.title.textColor = [UIColor colorWithRed:95/255.0 green:95/255.0 blue:95/255.0 alpha:1];
+    cell.bg.frame = CGRectMake(0, size.height+19, LWidth, 1);
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    tableView.rowHeight = size.height+20;
+    cell.tag = indexPath.row;
+    UILongPressGestureRecognizer * longPressGesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(cellLongPress:)];
+    [cell addGestureRecognizer:longPressGesture];
+    return cell;
+}
+- (CGSize)sizeWithString:(NSString *)string font:(UIFont *)font
+{
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(LWidth-40, LHeight)//限制最大的宽度和高度
+                                       options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading  | NSStringDrawingUsesLineFragmentOrigin//采用换行模式
+                                    attributes:@{NSFontAttributeName: font}
+                                       context:nil];
+    return rect.size;
+}
+- (void)cellLongPress:(UILongPressGestureRecognizer *)recognizer
+{
+    [alert_View removeFromSuperview];
+    alert_View = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LWidth, LHeight)];
+    alert_View.backgroundColor = [UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.1];
+    UITapGestureRecognizer * tapView = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapView)];
+    [alert_View addGestureRecognizer:tapView];
+    [self addSubview:alert_View];
+    
+    NSMutableArray* titleArray = [[NSMutableArray alloc] init];
+    [titleArray addObject:@"查看"];
+    if ([[dataDict objectForKey:@"_DEL"] isEqualToString:@"true"])[titleArray addObject:@"删除"];
+    if ([[dataDict objectForKey:@"_ADD"] isEqualToString:@"true"])[titleArray addObject:@"添加"];
+    if ([[dataDict objectForKey:@"_CHANGE"] isEqualToString:@"true"])[titleArray addObject:@"修改"];
+    btnView = [[UIView alloc] initWithFrame:CGRectMake(50, 100, LWidth-100, titleArray.count*50)];
+    btnView.layer.cornerRadius = 6;
+    btnView.layer.masksToBounds = YES;
+    btnView.backgroundColor = [UIColor whiteColor];
+    [alert_View addSubview:btnView];
+    if (titleArray.count < 1) {
+        [alert_View removeFromSuperview];
+        [SVProgressHUD showErrorWithStatus:@"这张表单不可操作"];
+    }else{
+        for (NSInteger index = 0; index < titleArray.count; index ++) {
+            UIButton* btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [btn setTitle:titleArray[index] forState:0];
+            [btn setTitleColor:[UIColor blueColor] forState:0];
+            btn.tag = recognizer.view.tag;
+            btn.titleLabel.font = [UIFont systemFontOfSize:16];
+            btn.frame = CGRectMake(0, index*50, LWidth-100, 50);
+            [btn addTarget:self action:@selector(menuClick:) forControlEvents:UIControlEventTouchUpInside];
+            [btnView addSubview:btn];
+            
+            UIImageView* row = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dividing-line"]];
+            row.frame = CGRectMake(0, index*50, LWidth, 1);
+            if (index==0)row.hidden = YES;
+            [btnView addSubview:row];
+        }
+    }
+}
+- (void)tapView
+{
+    [alert_View removeFromSuperview];
+}
+- (void)menuClick:(UIButton *)sender
+{
+    if ([sender.titleLabel.text isEqualToString:@"删除"]  ) {
+        [self delRequest:sender.tag];
+    }else if ([sender.titleLabel.text isEqualToString:@"添加"]) {
+        [self addRequest:sender.tag];
+    }else if ([sender.titleLabel.text isEqualToString:@"修改"]) {
+        [self changeRequest:sender.tag titleType:@"修改"];
+    }else if ([sender.titleLabel.text isEqualToString:@"查看"]) {
+        [self changeRequest:sender.tag titleType:@"查看"];
+    }
+}
+- (void)delRequest:(NSInteger)index
+{
+    indexDel = index;
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"小提示" message:@"此操作将会删除本条信息" delegate:self cancelButtonTitle:@"确认" otherButtonTitles:@"取消", nil];
+    [alert show];
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    [alertView removeFromSuperview];
+    if (buttonIndex==0) {
+        [SVProgressHUD showWithStatus:@"删除中..."];
+        //获取明细数据
+        NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:[dataDict objectForKey:@"AppDbConn"],@"APPDBCONN",@"DELOTHER",@"Action",[dataDict objectForKey:@"AppDbTable"],@"APPDBTABLE",[showArray[indexDel] objectForKey:[dataDict objectForKey:@"AppMainField"]],@"GUID",[dataDict objectForKey:@"AppMainField"],@"APPFLOWFIELD", nil];
+        MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@%@/%@",HTTPIP,SLRD,MOBILE_URL] withParameter:dict];
+        manager.backSuccess = ^void(NSDictionary *dictt)
+        {
+            [SVProgressHUD dismiss];
+            [showArray removeObjectAtIndex:indexDel];
+            [contenTableView reloadData];
+        };
+    }
+}
+- (NSString*)getUUIDString
+{
+    CFUUIDRef uuidObj = CFUUIDCreate(nil);
+    NSString *uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(nil, uuidObj);
+    CFRelease(uuidObj);
+    return uuidString;
+}
+- (void)addRequest:(NSInteger)index
+{
+    [alert_View removeFromSuperview];
+    NSArray* type = [[dataDict objectForKey:@"AppDb"] objectForKey:@"R"];
+    NSString* xmlStr = [NSString stringWithFormat:@"<Data><Action>SAVEDATA</Action><CMDTYPE>insert</CMDTYPE><CLIENTSRC>MOBILE</CLIENTSRC><APPDB>%@</APPDB><APPTABLE>%@</APPTABLE><TABLENAME>%@</TABLENAME><CFID type='flowfield'></CFID><CFID type='1'>%@</CFID><FCFID type='1'>%@</FCFID>",[dataDict objectForKey:@"AppDbConn"],[dataDict objectForKey:@"AppDbTable"],[dataDict objectForKey:@"AppDbTable"],[[self getUUIDString] stringByReplacingOccurrencesOfString:@"-" withString:@""],[showArray[index] objectForKey:[dataDict objectForKey:@"AppFlowField"]]];
+    if ([self.delegate respondsToSelector:@selector(RowViewController:data:rowData:isType:)]) {
+        [self.delegate RowViewController:xmlStr data:showArray[index] rowData:type isType:@"添加"];
+    }
+}
+- (void)changeRequest:(NSInteger)index titleType:(NSString *)aType
+{
+    [alert_View removeFromSuperview];
+    NSArray* type = [[dataDict objectForKey:@"AppDb"] objectForKey:@"R"];
+    NSString* xmlStr = [NSString stringWithFormat:@"<Data><Action>SAVEDATA</Action><CMDTYPE>update</CMDTYPE><CLIENTSRC>MOBILE</CLIENTSRC><APPDB>%@</APPDB><APPTABLE>%@</APPTABLE><TABLENAME>%@</TABLENAME><CFID type='flowfield'>%@</CFID>",[dataDict objectForKey:@"AppDbConn"],[dataDict objectForKey:@"AppDbTable"],[dataDict objectForKey:@"AppDbTable"],[showArray[index] objectForKey:[dataDict objectForKey:@"AppMainField"]]];
+    if ([self.delegate respondsToSelector:@selector(RowViewController:data:rowData:isType:)]) {
+        [self.delegate RowViewController:xmlStr data:showArray[index] rowData:type isType:aType];
+    }
+}
+@end

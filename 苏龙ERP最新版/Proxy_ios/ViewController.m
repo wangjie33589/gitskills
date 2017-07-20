@@ -1,0 +1,108 @@
+//
+//  ViewController.m
+//  Proxy_ios
+//
+//  Created by E-Bans on 15/11/13.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import "ViewController.h"
+#import "LoginViewController.h"
+#import "Home_Function_ViewController.h"
+#import "Home_Home_ViewController.h"
+#import "Home_task_ViewController.h"
+#import "Home_User_ViewController.h"
+#import "LeftViewController.h"
+
+#import "BYMainController.h"
+#import "CommonFunctionVC.h"
+
+@interface ViewController ()
+
+@end
+
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"installation"]==nil) {
+//        NSDate *  senddate=[NSDate date];
+//        NSDateFormatter  *dateformatter=[[NSDateFormatter alloc] init];
+//        [dateformatter setDateFormat:@"yyyy-MM-dd"];
+//        NSString *  locationString=[dateformatter stringFromDate:senddate];
+//        [userDefaults setObject:locationString forKey:@"installation"];
+//        [userDefaults synchronize];
+//    }
+    
+    if ([[userDefaults objectForKey:@"login"] isEqualToString:@"success"]) {
+        [self successLogin];
+    }else{
+        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+       LoginViewController* loginVC = [story instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        [App window].rootViewController = loginVC;
+    }
+}
+- (void)successLogin
+{    
+    UIStoryboard *story1 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    Home_Home_ViewController *homeVC = [story1 instantiateViewControllerWithIdentifier:@"Home_Home_ViewController"];
+   
+    UIStoryboard *story2 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    Home_task_ViewController *taskVC = [story2 instantiateViewControllerWithIdentifier:@"Home_task_ViewController"];
+    UIStoryboard *story3 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    Home_Function_ViewController *productionVC = [story3 instantiateViewControllerWithIdentifier:@"Home_Function_ViewController"];
+    CommonFunctionVC *productionVC = [story3 instantiateViewControllerWithIdentifier:@"CommonFunctionVC"];
+    UIStoryboard *story4 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    Home_User_ViewController *userVC = [story4 instantiateViewControllerWithIdentifier:@"Home_User_ViewController"];
+    
+    UINavigationController * Nav1 = [[UINavigationController alloc] initWithRootViewController:homeVC];
+    Nav1.tabBarItem.title = @"首页";
+    //    theNavigationController.tabBarItem.imageInsets = UIEdgeInsetsMake(5, 0, -5, 0);//纠正图片位置
+    [Nav1.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav1.tabBarItem.image = [UIImage imageNamed:@"sy_1"];
+    Nav1.tabBarItem.selectedImage = [[UIImage imageNamed:@"sy"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UINavigationController * Nav2 = [[UINavigationController alloc] initWithRootViewController:taskVC];
+    Nav2.tabBarItem.title = @"我的事务";
+    [Nav2.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav2.tabBarItem.image = [UIImage imageNamed:@"sw_1"];
+    Nav2.tabBarItem.selectedImage = [[UIImage imageNamed:@"sw"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UINavigationController * Nav3 = [[UINavigationController alloc] initWithRootViewController:productionVC];
+    Nav3.tabBarItem.title = @"常用功能";
+    [Nav3.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav3.tabBarItem.image = [UIImage imageNamed:@"gl_1"];
+    Nav3.tabBarItem.selectedImage = [[UIImage imageNamed:@"gl"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    UINavigationController * Nav4 = [[UINavigationController alloc] initWithRootViewController:userVC];
+    Nav4.tabBarItem.title = @"个人中心";
+    [Nav4.tabBarItem setTitlePositionAdjustment:UIOffsetMake(3, -3)];//纠正title位置
+    Nav4.tabBarItem.image = [UIImage imageNamed:@"gr_1"];
+    Nav4.tabBarItem.selectedImage = [[UIImage imageNamed:@"gr"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    
+    
+    AppDelegate *aAppDelegate=(AppDelegate *)[[UIApplication sharedApplication] delegate];
+    aAppDelegate.tabBarCtr = [[UITabBarController alloc]init];
+    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:0/255.0 green:149/255.0 blue:255/255.0 alpha:1]];
+    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
+    //        [[UITabBar appearance] setBackgroundImage:[ConFunc createImageWithColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]
+    //                                                                           size:CGSizeMake(LWidth,48)]];//设置背景，修改颜色是没有用的
+    aAppDelegate.tabBarCtr.viewControllers = @[Nav1,Nav2,Nav3,Nav4];
+    aAppDelegate.tabBarCtr.selectedIndex = 0;
+       [aAppDelegate.ddMenu showLeftController:YES];
+    UIStoryboard *story5 = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LeftViewController *leftVC = [story5 instantiateViewControllerWithIdentifier:@"LeftViewController"];
+    leftVC.delegate = (id)homeVC;
+    leftVC.delegatePush = (id)homeVC;
+    leftVC.delegateFunction = (id)productionVC;
+    UINavigationController * leftNav = [[UINavigationController alloc] initWithRootViewController:leftVC];
+    aAppDelegate.ddMenu = [[DDMenuController alloc] initWithRootViewController:aAppDelegate.tabBarCtr];
+    aAppDelegate.ddMenu.leftViewController = leftNav;
+    aAppDelegate.window.rootViewController = aAppDelegate.ddMenu;
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+@end

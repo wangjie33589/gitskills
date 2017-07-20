@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GesturesViewController">
+            <connections>
+                <outlet property="delPassWord" destination="8s7-On-Ugz" id="kMe-ED-8FN"/>
+                <outlet property="modifyPassWord" destination="nlC-l1-jbD" id="5Tv-oi-8gp"/>
+                <outlet property="setPassWork" destination="d5a-SH-KG2" id="mdn-zc-PfR"/>
+                <outlet property="view" destination="6rn-ju-xPY" id="OVb-pM-dSg"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="6rn-ju-xPY">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="2Rf-mx-HzT">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                </imageView>
+                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nlC-l1-jbD">
+                    <rect key="frame" x="20" y="338" width="280" height="44"/>
+                    <color key="backgroundColor" red="0.22943438760000001" green="0.53985400350000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="4BN-jd-dpm"/>
+                    </constraints>
+                    <state key="normal" title="修改密码">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="gesturesClick:" destination="-1" eventType="touchUpInside" id="G4R-94-j3w"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8s7-On-Ugz">
+                    <rect key="frame" x="20" y="392" width="280" height="44"/>
+                    <color key="backgroundColor" red="0.22943438760000001" green="0.53985400350000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="1Dg-3m-YMD"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="dOf-wE-wT3"/>
+                    </constraints>
+                    <state key="normal" title="取消密码">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="gesturesClick:" destination="-1" eventType="touchUpInside" id="PjP-pW-S0X"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d5a-SH-KG2">
+                    <rect key="frame" x="20" y="283" width="280" height="44"/>
+                    <color key="backgroundColor" red="0.22943438760000001" green="0.53985400350000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="IdI-v5-De0"/>
+                    </constraints>
+                    <state key="normal" title="设置密码">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="titleShadowColor" red="1" green="0.17459088079999999" blue="0.22572639010000001" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="gesturesClick:" destination="-1" eventType="touchUpInside" id="fhp-UL-e3a"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.90446862930000005" green="0.90446862930000005" blue="0.90446862930000005" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="2Rf-mx-HzT" firstAttribute="leading" secondItem="6rn-ju-xPY" secondAttribute="leading" id="8vu-6m-Wip"/>
+                <constraint firstItem="8s7-On-Ugz" firstAttribute="leading" secondItem="6rn-ju-xPY" secondAttribute="leading" constant="20" id="9x1-uk-Mcy"/>
+                <constraint firstAttribute="bottom" secondItem="2Rf-mx-HzT" secondAttribute="bottom" id="GNE-er-oeL"/>
+                <constraint firstAttribute="trailing" secondItem="2Rf-mx-HzT" secondAttribute="trailing" id="Gcc-pr-hzs"/>
+                <constraint firstAttribute="trailing" secondItem="nlC-l1-jbD" secondAttribute="trailing" constant="20" id="PF5-66-uAj"/>
+                <constraint firstItem="nlC-l1-jbD" firstAttribute="leading" secondItem="6rn-ju-xPY" secondAttribute="leading" constant="20" id="QL1-61-Vwx"/>
+                <constraint firstItem="d5a-SH-KG2" firstAttribute="leading" secondItem="6rn-ju-xPY" secondAttribute="leading" constant="20" id="Upr-pf-Lms"/>
+                <constraint firstItem="nlC-l1-jbD" firstAttribute="top" secondItem="d5a-SH-KG2" secondAttribute="bottom" constant="11" id="cRQ-MN-YOb"/>
+                <constraint firstItem="2Rf-mx-HzT" firstAttribute="top" secondItem="6rn-ju-xPY" secondAttribute="top" id="dFo-Zm-5oN"/>
+                <constraint firstAttribute="bottom" secondItem="8s7-On-Ugz" secondAttribute="bottom" constant="44" id="pap-KB-x1E"/>
+                <constraint firstItem="8s7-On-Ugz" firstAttribute="top" secondItem="nlC-l1-jbD" secondAttribute="bottom" constant="10" id="wHr-y7-9kM"/>
+                <constraint firstAttribute="trailing" secondItem="d5a-SH-KG2" secondAttribute="trailing" constant="20" id="xog-rx-bVT"/>
+                <constraint firstAttribute="trailing" secondItem="8s7-On-Ugz" secondAttribute="trailing" constant="20" id="zUy-OV-KoF"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="417" y="355"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="bg.png" width="720" height="1280"/>
+    </resources>
+</document>

@@ -1,0 +1,76 @@
+//
+//  confirmVC.m
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import "confirmVC.h"
+#import "detilModel.h"
+
+@interface confirmVC ()
+
+@end
+
+@implementation confirmVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self configView];
+}
+-(id)initWithDataSourse:(NSMutableArray *)arr{
+    
+    
+    self =[super init];
+    if (self) {
+        //        self.detilmodel=model;
+        //        NSLog(@"model==%@",model);
+        self.dataARR =arr;
+       // NSLog(@"___DATA===%@",self.dataARR);
+        
+            
+        
+    }
+    
+    return self;
+}
+
+
+
+
+
+-(void)configView{
+    
+    detilModel *model =self.dataARR[0];
+        _firstLab.text=[NSString stringWithFormat:@"任务名称：%@",model.title];
+   _secondfLab.text=[NSString stringWithFormat:@"分配人：%@  %@",model.mangerName,model.mangeTime];
+   _ThirdLab.text=[NSString stringWithFormat:@"计划时间：%@",model.FPetime];
+    _contentView.text= model.Fcontent;
+    
+    
+    
+    
+    
+    
+}
+
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

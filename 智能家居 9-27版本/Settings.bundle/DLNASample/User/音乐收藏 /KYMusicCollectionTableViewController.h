@@ -1,0 +1,24 @@
+//
+//  KYMusicCollectionTableViewController.h
+//  SyncSmartHome
+//
+//  Created by SciyonSoft_WangJie on 16/6/8.
+//  Copyright © 2016年 sciyonSoft. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <CyberLink/UPnPAV.h>
+
+
+@class ServerContentViewController;
+@class CGUpnpAvController;
+
+@interface KYMusicCollectionTableViewController : UIViewController<CGUpnpControlPointDelegate>
+@property (strong, nonatomic) IBOutlet UITableView *myTable;
+@property (strong, nonatomic) ServerContentViewController *detailViewController;
+@property (nonatomic, retain) NSArray* dataSource;
+@property (nonatomic, retain) NSArray* renderers;
+@property (nonatomic, retain) CGUpnpAvController* avController;
+
+
+@end

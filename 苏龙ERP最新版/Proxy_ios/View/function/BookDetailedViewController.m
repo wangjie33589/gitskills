@@ -1,0 +1,167 @@
+//
+//  BookDetailedViewController.m
+//  Proxy_ios
+//
+//  Created by E-Bans on 15/11/19.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import "BookDetailedViewController.h"
+#import "UIImageView+WebCache.h"
+
+static CGFloat ImageHeight  = 120.0;
+//static CGFloat ImageWidth  = 320.0;
+
+@interface BookDetailedViewController ()
+
+@end
+
+@implementation BookDetailedViewController
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    CGFloat yOffset   = self.scrollView.contentOffset.y;
+    
+    if (yOffset < 0) {
+        
+        CGFloat factor = ((ABS(yOffset)+ImageHeight)*LWidth)/ImageHeight;
+        CGRect f = CGRectMake(-(factor-LWidth)/2, 0, factor, ImageHeight+ABS(yOffset));
+        self.imgProfile.frame = f;
+    } else {
+        CGRect f = self.imgProfile.frame;
+        f.origin.y = -yOffset;
+        self.imgProfile.frame = f;
+    }
+}
+
+#pragma mark - View lifecycle
+- (id)initWithModel:(BookModel *)aModel
+{
+    self = [super init];
+    if (self) {
+        self.view.backgroundColor = [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1];
+        UIImage *image = [UIImage imageNamed:@"banner-iphone6P"];
+        self.imgProfile = [[UIImageView alloc] initWithImage:image];
+        self.imgProfile.frame             = CGRectMake(0, 0, LWidth, ImageHeight);
+        UIImageView *fakeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@""]];
+        
+        CGRect frame = fakeView.frame;
+        frame.origin.y = ImageHeight;
+        fakeView.frame = frame;
+        
+        self.scrollView = [[UIScrollView alloc] init];
+        self.scrollView.delegate = self;
+        self.scrollView.backgroundColor = [UIColor clearColor];
+        
+        [self.scrollView addSubview:fakeView];
+        
+        [self.view addSubview:self.imgProfile];
+        [self.view addSubview:self.scrollView];
+
+        self.model = aModel;
+        self.title = self.model.userName;
+        [self initView];
+    }
+    return self;
+}
+- (void)initView
+{
+    UIImageView* userHead = [[UIImageView alloc] init];
+    [[SDImageCache sharedImageCache] clearDisk];
+    [[SDImageCache sharedImageCache] clearMemory];
+    userHead.backgroundColor = [UIColor whiteColor];
+    [userHead sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@%@/Jsframe/SystemMng/PersonImages/%@",HTTPIP,SLRD,self.model.userImag]] placeholderImage:[UIImage imageNamed:@"imagUserIndex"]];
+    userHead.frame = CGRectMake(LWidth/2-40, 80, 80, 80);
+    userHead.layer.masksToBounds = YES;
+    userHead.layer.cornerRadius = 40;
+    userHead.layer.borderColor = [[UIColor whiteColor] CGColor];
+    userHead.layer.borderWidth = 1.5f;
+    userHead.backgroundColor = [UIColor clearColor];
+    [self.scrollView addSubview:userHead];
+    
+    UILabel* name = [[UILabel alloc] initWithFrame:CGRectMake(0, 165, LWidth, 20)];
+    name.text = [NSString stringWithFormat:@"%@",self.model.userName];
+    name.font = [UIFont fontWithName:@"Helvetica-Bold" size:16.0];
+    name.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1];
+    name.textAlignment = NSTextAlignmentCenter;
+    [self.scrollView addSubview:name];
+    
+    UILabel* jobs = [[UILabel alloc] initWithFrame:CGRectMake(0, 185, LWidth, 20)];
+    jobs.text = [NSString stringWithFormat:@"%@ - %@",self.model.dept,self.model.positionName];
+    jobs.font = [UIFont systemFontOfSize:14];
+    jobs.textColor = [UIColor colorWithRed:121/255.0 green:121/255.0 blue:121/255.0 alpha:1];
+    jobs.textAlignment = NSTextAlignmentCenter;
+    [self.scrollView addSubview:jobs];
+    
+    UIView* userInfoView = [[UIView alloc] initWithFrame:CGRectMake(0, 210, LWidth, 250)];
+    userInfoView.backgroundColor = [UIColor whiteColor];
+    [self.scrollView addSubview:userInfoView];
+    
+    NSArray* typeImagArray = @[@"user",@"phone1",@"phone2",@"double",@"mail"];
+    NSArray* typeLBArray = @[@"工       号:",@"办公电话:",@"移动电话:",@"即时通讯:",@"电子邮箱:"];
+    NSArray* contensArray = @[self.model.userId,self.model.tel,self.model.phone,self.model.msn,self.model.email];
+    for (NSInteger index = 0; index < 5; index ++) {
+        UIImageView* typeIV = [[UIImageView alloc] init];
+        typeIV.image = [UIImage imageNamed:typeImagArray[index]];
+        typeIV.frame = CGRectMake(8, (index*50)+12.5, 25, 25);
+        [userInfoView addSubview:typeIV];
+        
+        UIImageView* bg = [[UIImageView alloc] init];
+        bg.image = [UIImage imageNamed:@"dividing-line"];
+        bg.frame = CGRectMake(0, (index*50)+49, LWidth, 1);
+        [userInfoView addSubview:bg];
+        
+        UILabel* typeLB = [[UILabel alloc] initWithFrame:CGRectMake(45, index*50, 80, 50)];
+        typeLB.text = [NSString stringWithFormat:@"%@",typeLBArray[index]];
+        typeLB.font = [UIFont systemFontOfSize:15];
+        typeLB.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1];
+        typeLB.textAlignment = NSTextAlignmentLeft;
+        [userInfoView addSubview:typeLB];
+        
+        UILabel* contens = [[UILabel alloc] initWithFrame:CGRectMake(120, index*50, 200, 50)];
+        contens.text = [[NSString stringWithFormat:@"%@",contensArray[index]] stringByReplacingOccurrencesOfString:@";" withString:@""];
+        contens.font = [UIFont systemFontOfSize:15];
+        if (index==1||index==2) {
+            contens.textColor = [UIColor blueColor];
+        }else{
+            contens.textColor = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1];
+        }
+        contens.textAlignment = NSTextAlignmentLeft;
+        [userInfoView addSubview:contens];
+        
+        UIButton* btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = contens.frame;
+        btn.backgroundColor = [UIColor clearColor];
+        [btn setTitle:contensArray[index] forState:0];
+        [btn setTitleColor:[UIColor clearColor] forState:0];
+        if (index==1||index==2) {
+            [btn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
+        }
+        [userInfoView addSubview:btn];
+    }
+    
+    if (IPHONE_5)self.scrollView.contentSize = CGSizeMake(320, 668);
+    if (IPHONE_6)self.scrollView.contentSize = CGSizeMake(320, 668);
+}
+- (void)phoneClick:(UIButton *)phone
+{
+    if (phone.titleLabel.text.length>6) {
+        NSMutableString * str=[[NSMutableString alloc] initWithFormat:@"telprompt://%@",phone.titleLabel.text];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+    }
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.scrollView.frame = CGRectMake(0, 0, LWidth, LHeight);
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

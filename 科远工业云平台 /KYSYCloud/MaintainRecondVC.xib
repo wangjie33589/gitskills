@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MaintainRecondVC">
+            <connections>
+                <outlet property="MyTableView" destination="cFo-ga-d5Z" id="QvL-Nn-XXO"/>
+                <outlet property="mySearchBar" destination="928-bR-IFd" id="TW1-IP-nGj"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cFo-ga-d5Z">
+                    <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <searchBar contentMode="redraw" text="" placeholder="请输入设备编号/条形码/客户/部件编码" translatesAutoresizingMaskIntoConstraints="NO" id="928-bR-IFd">
+                    <rect key="frame" x="0.0" y="64" width="273" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="iub-xH-ONQ"/>
+                    </constraints>
+                    <textInputTraits key="textInputTraits"/>
+                </searchBar>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="94c-vP-4Tx">
+                    <rect key="frame" x="273" y="64" width="47" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="47" id="enE-7d-Csz"/>
+                        <constraint firstAttribute="height" constant="44" id="uPV-97-uxh"/>
+                    </constraints>
+                    <state key="normal" title="Button" image="scan.png"/>
+                    <connections>
+                        <action selector="EWMBtnClick:" destination="-1" eventType="touchUpInside" id="jR0-De-Ay6"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="cFo-ga-d5Z" secondAttribute="bottom" id="6ee-eW-ZAw"/>
+                <constraint firstItem="cFo-ga-d5Z" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="7WY-ld-L0c"/>
+                <constraint firstItem="928-bR-IFd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="b8M-tF-rpj"/>
+                <constraint firstAttribute="trailing" secondItem="cFo-ga-d5Z" secondAttribute="trailing" id="gUg-cP-wE2"/>
+                <constraint firstItem="cFo-ga-d5Z" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="kVm-wj-lpI"/>
+                <constraint firstItem="94c-vP-4Tx" firstAttribute="leading" secondItem="928-bR-IFd" secondAttribute="trailing" id="q4a-Fh-T1Y"/>
+                <constraint firstItem="928-bR-IFd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="tF1-sD-ghm"/>
+                <constraint firstItem="94c-vP-4Tx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="xuX-T0-4De"/>
+                <constraint firstAttribute="trailing" secondItem="94c-vP-4Tx" secondAttribute="trailing" id="yee-6V-2e8"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="scan.png" width="46" height="46"/>
+    </resources>
+</document>

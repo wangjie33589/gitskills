@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="serverSettingVc">
+            <connections>
+                <outlet property="OKBtn" destination="KNC-uV-ube" id="2SS-eh-Pqb"/>
+                <outlet property="listTableView" destination="0Is-xb-pTw" id="84Y-Uf-P6n"/>
+                <outlet property="textField" destination="AmO-bs-5i5" id="N9i-Ks-Zpr"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AmO-bs-5i5">
+                    <rect key="frame" x="8" y="99" width="257" height="30"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="5H1-Yg-Vwh"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ClK-Hr-qQu">
+                    <rect key="frame" x="264" y="99" width="48" height="30"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="ZBy-Yy-4o0"/>
+                        <constraint firstAttribute="width" constant="48" id="ahM-cZ-jjx"/>
+                    </constraints>
+                    <state key="normal" title="Button" image="dropdown.png"/>
+                    <connections>
+                        <action selector="dropBtn:" destination="-1" eventType="touchUpInside" id="UUh-kI-VlV"/>
+                    </connections>
+                </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0Is-xb-pTw">
+                    <rect key="frame" x="0.0" y="131" width="265" height="349"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KNC-uV-ube">
+                    <rect key="frame" x="72" y="165" width="176" height="30"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.13495976940000001" green="0.49719063209999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Q5r-8s-y4l"/>
+                    </constraints>
+                    <state key="normal" title=" 确  定">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="OKBtnclick:" destination="-1" eventType="touchUpInside" id="uQB-A8-LQq"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ClK-Hr-qQu" secondAttribute="trailing" constant="8" id="5Ei-CY-yEY"/>
+                <constraint firstItem="AmO-bs-5i5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="65i-ha-TY9"/>
+                <constraint firstItem="ClK-Hr-qQu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="99" id="79M-8E-6zd"/>
+                <constraint firstAttribute="trailing" secondItem="KNC-uV-ube" secondAttribute="trailing" constant="72" id="7eg-Fh-BvY"/>
+                <constraint firstAttribute="trailing" secondItem="0Is-xb-pTw" secondAttribute="trailing" constant="55" id="Pwe-V9-erH"/>
+                <constraint firstItem="AmO-bs-5i5" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="99" id="bex-68-oJ5"/>
+                <constraint firstAttribute="trailing" secondItem="AmO-bs-5i5" secondAttribute="trailing" constant="55" id="jvg-Mq-yBQ"/>
+                <constraint firstItem="0Is-xb-pTw" firstAttribute="top" secondItem="AmO-bs-5i5" secondAttribute="bottom" constant="2" id="lDI-dB-Y3M"/>
+                <constraint firstItem="KNC-uV-ube" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="72" id="lsT-b5-nk0"/>
+                <constraint firstItem="KNC-uV-ube" firstAttribute="top" secondItem="AmO-bs-5i5" secondAttribute="bottom" constant="36" id="odG-Vf-ylr"/>
+                <constraint firstAttribute="bottom" secondItem="0Is-xb-pTw" secondAttribute="bottom" id="uzX-IV-POW"/>
+                <constraint firstItem="0Is-xb-pTw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="wxQ-fB-Q3h"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="230" y="309"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="dropdown.png" width="13" height="13"/>
+    </resources>
+</document>

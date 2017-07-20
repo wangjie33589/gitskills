@@ -1,0 +1,172 @@
+//
+//  Prefix_ios.pch
+//  Proxy_ios
+//
+//  Created by E-Bans on 15/11/13.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+/*
+ 修改日志:
+ 2015 年12月16日星期三下午
+ 修改添加了
+1 NSString *newkey=keyArrays[key];
+ NSString *nowkey=[NSString stringWithFormat:@"[%@]",newkey];
+2.登陆时设置了安全输入
+3.添加了 返回的url中又该字段就替换成httpid
+ #define FLAG  @"[CONNECT]" \ [title rangeOfString:FLAG].location!=NSNotFound
+ 4。修改了chartLine中的线的颜色，并修改了其中x轴中的时间。
+ 2015年12月17日上午
+ 1。解决了key值替换的bug
+ 2.解决了图表不能正常显示的bug
+ 
+ 2015年12月18日周五上午 
+ 1.改动了操作票查询中的重置按钮位置。
+ 2.解决了历史曲线不加载问题。w
+ 2015 12月18日下午
+ 周五下午，改动了环保数据显示不正确问题
+ //需要注意问题，  //回去查询数据格式化的信息。
+ 
+ 1.历史曲线
+ 2.格式化问题
+2015年12月30日
+ 1。修改了搜索查询中的一些bug
+ 2.修改了下拉刷新出现的一些问题
+ 3。修改了下拉刷新出现的一些问题
+ 4.修改了历史曲线随时跟着x轴运动
+ 5.修改了重置的位置
+ 6.修改了首页的曲线镖师的位置。
+ 
+ 2016年1月12日 增加了二维码 增加了曲线查询的状态颜色 ，修改了首页 ，修改了通用查询中的问题
+ 
+ 
+ geng
+ ******shiyan*******/
+ 
+
+#ifndef Prefix_ios_pch
+#define Prefix_ios_pch
+
+#import "SVProgressHUD.h" //过度菊花
+#import "MyRequest.h" //网络请求
+#import "AppDelegate.h"
+#import "XMLDictionary.h"
+#import "MyTool.h"
+#import "ConFunc.h"
+
+//测试一下svn是否管用
+//#define APP_UPDATA_XMLURL @"http://192.168.6.44/slrd/proxymobile/getiosversion.xml"
+#define APP_DOWNLOAD_XCURL @"itms-services:/action=download-manifest&url=https://git.oschina.net/zsm605/sciyonApp/raw/master/manifest_slrd.plist"
+#define APP_DOWNLOAD_CSURL @"itms-services:/action=download-manifest&url=https://git.oschina.net/zsm605/sciyonApp/raw/master/manifest_test.plist"
+//根目录
+//#define SLRD @"/slrd"
+#define SLRD @""
+#define MOBILE_URL @"ProxyMobile/WorkflowHandler.ashx"
+#define PROXY_URL @"ProxyMobile/PaginationJsonProxy.ashx"
+#define PAGIN_URL @"CUST_SLRD/ProxyMobile/PaginationProxy.ashx"
+#define PAGE_PROFIX_URL @"ProxyMobile/PaginationProxy.ashx"
+#define BASE_URL  @"CUST_SLRD/ProxyMobile/BaseDataProxy.ashx"
+#define OA_PAGINATION @"/OA/RSM/ProxyMobile/PaginationProxy.ashx"
+#define OA_CAR_APPLY_URL @"/OA/RSM/ProxyMobile/CarApply.ashx"
+#define App (AppDelegate *)[[UIApplication sharedApplication] delegate]
+
+#define LWidth [UIScreen mainScreen].bounds.size.width //屏幕宽
+#define LHeight [UIScreen mainScreen].bounds.size.height //高
+
+#define IPHONE_5 [UIScreen mainScreen].bounds.size.width < 375 
+#define IPHONE_6 [UIScreen mainScreen].bounds.size.width == 375 
+#define IPHONE_6p [UIScreen mainScreen].bounds.size.width > 375 
+
+#define USERNAME [[NSUserDefaults standardUserDefaults] objectForKey:@"userName"]
+#define USERHEADIMAG [[NSUserDefaults standardUserDefaults] objectForKey:@"iconImage"]
+#define USERID [[NSUserDefaults standardUserDefaults] objectForKey:@"userId"]
+#define USERGUID [[NSUserDefaults standardUserDefaults] objectForKey:@"userGuid"]
+#define USERORGGUID [[NSUserDefaults standardUserDefaults] objectForKey:@"userOrgGuid"]
+#define installation [[NSUserDefaults standardUserDefaults] objectForKey:@"installation"]
+#define USERTASK [[NSUserDefaults standardUserDefaults] objectForKey:@"positionName"]
+#define DEPTGUID [[NSUserDefaults standardUserDefaults] objectForKey:@"deptGuid"]
+#define DEPTNAME [[NSUserDefaults standardUserDefaults] objectForKey:@"deptName"]
+#define ORGGUID [[NSUserDefaults standardUserDefaults] objectForKey:@"orgGuid"]
+#define ORGNAME [[NSUserDefaults standardUserDefaults] objectForKey:@"orgName"]
+#define POSITIONGUID [[NSUserDefaults standardUserDefaults]objectForKey:@"positionGuid"]
+#pragma clang diagnostic ignored "Multiple build commands for output file /Users/sciyonSoft/Library/Developer/Xcode/DerivedData/Proxy_ios-glucuebgzlokglgqzjodumpzcvvw/Build/Products/Debug-iphonesimulator/Proxy_ios.app/fujian@2x.png"
+
+
+#pragma clang diagnostic ignored "'dismissModalViewController Animated:'is deprecated:first deprecated in iOS 6.0"
+
+//Automatic Preferred Max Layout Width before iOS 8.0 Main.storyboard
+
+
+//[userDefaults setObject:[data objectForKey:@"deptGuid"] forKey:@"deptGuid"];
+//[userDefaults setObject:[data objectForKey:@"deptName"] forKey:@"deptName"];
+//
+//[userDefaults setObject:[data objectForKey:@"iconImage"] forKey:@"iconImage"];
+//
+//[userDefaults setObject:[data objectForKey:@"positionGuid"] forKey:@"positionGuid"];
+//[userDefaults setObject:[data objectForKey:@"positionName"] forKey:@"positionName"];
+//
+//[userDefaults setObject:[data objectForKey:@"userGuid"] forKey:@"userGuid"];
+//[userDefaults setObject:[data objectForKey:@"userId"] forKey:@"userId"];
+//[userDefaults setObject:[data objectForKey:@"userName"] forKey:@"userName"];
+//[userDefaults setObject:[data objectForKey:@"userOrgGuid"] forKey:@"userOrgGuid"];
+//[userDefaults synchronize];
+
+//现场
+//
+//#define HTTPSIM @"222.191.242.228:8081"//外网
+//#define HTTPWIFI @"192.168.0.88"//内网wifi
+////
+//现场测试
+//
+#define HTTPSIM @"10.1.48.63/webframe"//外网
+#define HTTPWIFI @"10.1.48.63/webframe"//内网wifi
+////测试
+
+//#define HTTPSIM @"google.com"//外网
+//#define HTTPWIFI @"192.168.6.44"//内网wifi
+//
+
+
+//#define HTTPSIM @"google.com"//外网
+//#define HTTPWIFI @"10.88.12.115"//内网wifi
+
+//开发工作任务测试
+//#define HTTPSIM @"10.88.12.15:20159"//外网
+//#define HTTPWIFI @"google.com"//内网wifi
+//
+
+
+//演示环境
+
+//#define HTTPSIM @"221.226.212.74:65532"//外网
+//#define HTTPWIFI @"10.88.12.115:65532"//内网wifi
+//更新时间
+#define CHANGE_TIME @"2017-07-15"
+
+
+
+#define FLAG  @"[CONNECT]"
+
+#define HTTPIP [[NSUserDefaults standardUserDefaults] objectForKey:@"http"]
+
+//********************************新闻配置
+#define kStatusHeight 20
+#define kScreenW [UIScreen mainScreen].bounds.size.width
+#define kScreenH [UIScreen mainScreen].bounds.size.height
+#define RGBColor(r,g,b) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:1.0]
+#define RGBColorAlpha(r,g,b,a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
+
+#define padding 20
+#define itemPerLine 4
+#define kItemW (kScreenW-padding*(itemPerLine+1))/itemPerLine
+#define kItemH 25
+
+typedef enum{
+    topViewClick = 0,
+    FromTopToTop = 1,
+    FromTopToTopLast = 2,
+    FromTopToBottomHead = 3,
+    FromBottomToTopLast = 4
+} animateType;
+
+#endif

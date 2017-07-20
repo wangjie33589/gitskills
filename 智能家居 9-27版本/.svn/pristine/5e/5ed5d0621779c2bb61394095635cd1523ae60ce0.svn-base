@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChangeVC">
+            <connections>
+                <outlet property="imageView" destination="9Kl-bO-Rob" id="Npk-F2-NS1"/>
+                <outlet property="myTextField" destination="6fy-ck-mq8" id="fiI-uM-UF5"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="10-1-角色管理-_03.png" translatesAutoresizingMaskIntoConstraints="NO" id="9Kl-bO-Rob">
+                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="100" id="5EV-iO-Y8c"/>
+                        <constraint firstAttribute="height" constant="100" id="lPX-4L-kCk"/>
+                    </constraints>
+                </imageView>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6fy-ck-mq8">
+                    <rect key="frame" x="108" y="41" width="188" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="WQM-zw-wYB"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NaZ-2l-O0a">
+                    <rect key="frame" x="45" y="150" width="230" height="38"/>
+                    <color key="backgroundColor" red="0.0" green="0.40645607789999999" blue="0.85532094589999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="38" id="Wz6-bU-kdd"/>
+                    </constraints>
+                    <state key="normal" title=" 保  存">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="btnClick:" destination="-1" eventType="touchUpInside" id="5S5-bT-cXj"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dividing-line.png" translatesAutoresizingMaskIntoConstraints="NO" id="Gmq-Mn-tOz">
+                    <rect key="frame" x="92" y="79" width="228" height="1"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="qAe-sB-ffy"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Gmq-Mn-tOz" firstAttribute="top" secondItem="6fy-ck-mq8" secondAttribute="bottom" constant="8" id="4zk-Qz-fvW"/>
+                <constraint firstItem="9Kl-bO-Rob" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="8bv-rI-190"/>
+                <constraint firstAttribute="trailing" secondItem="6fy-ck-mq8" secondAttribute="trailing" constant="24" id="ECO-hM-29e"/>
+                <constraint firstItem="Gmq-Mn-tOz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="79" id="LPU-oV-aCb"/>
+                <constraint firstAttribute="trailing" secondItem="Gmq-Mn-tOz" secondAttribute="trailing" id="Vba-jg-LcR"/>
+                <constraint firstAttribute="trailing" secondItem="NaZ-2l-O0a" secondAttribute="trailing" constant="45" id="WOa-pp-BKw"/>
+                <constraint firstItem="NaZ-2l-O0a" firstAttribute="top" secondItem="9Kl-bO-Rob" secondAttribute="bottom" constant="50" id="XpZ-y2-wGy"/>
+                <constraint firstItem="NaZ-2l-O0a" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="45" id="bSZ-lT-Fdz"/>
+                <constraint firstItem="Gmq-Mn-tOz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="92" id="o2G-P8-LBf"/>
+                <constraint firstItem="9Kl-bO-Rob" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="y9n-5U-qs6"/>
+                <constraint firstItem="6fy-ck-mq8" firstAttribute="leading" secondItem="9Kl-bO-Rob" secondAttribute="trailing" constant="8" id="yUT-Re-SW7"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="10-1-角色管理-_03.png" width="137" height="138"/>
+        <image name="dividing-line.png" width="320" height="1"/>
+    </resources>
+</document>

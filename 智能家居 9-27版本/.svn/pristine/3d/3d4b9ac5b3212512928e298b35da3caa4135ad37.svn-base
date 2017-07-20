@@ -1,0 +1,15 @@
+//
+//  Area_Detil_ViewController.h
+//  SmartHome
+//
+//  Created by SciyonSoft_WangJie on 16/6/29.
+//
+//
+
+#import <UIKit/UIKit.h>
+
+@interface Area_Detil_ViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UITableView *myTable;
+-(id)initWithDic:(NSDictionary*)aDic;
+
+@end

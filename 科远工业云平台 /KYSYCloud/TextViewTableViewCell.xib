@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="TextViewTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="99"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dividing-line.png" translatesAutoresizingMaskIntoConstraints="NO" id="aFB-zM-8OT">
+                        <rect key="frame" x="0.0" y="99" width="320" height="1"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="6fM-7N-XW2"/>
+                        </constraints>
+                    </imageView>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="wXD-xm-3rz">
+                        <rect key="frame" x="100" y="0.0" width="220" height="99"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 报修内容:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fo5-Br-AXL">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="cBc-e5-niT"/>
+                            <constraint firstAttribute="height" constant="40" id="umq-FF-LpI"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="wXD-xm-3rz" firstAttribute="leading" secondItem="Fo5-Br-AXL" secondAttribute="trailing" id="5DD-B4-1Oo"/>
+                    <constraint firstItem="Fo5-Br-AXL" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="68c-pP-pfy"/>
+                    <constraint firstItem="aFB-zM-8OT" firstAttribute="top" secondItem="wXD-xm-3rz" secondAttribute="bottom" id="8MU-9b-XXh"/>
+                    <constraint firstItem="Fo5-Br-AXL" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="8RW-fN-Ish"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="aFB-zM-8OT" secondAttribute="trailing" constant="-8" id="LIn-rQ-P8C"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="wXD-xm-3rz" secondAttribute="trailing" constant="-8" id="MeP-dK-zhI"/>
+                    <constraint firstItem="wXD-xm-3rz" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="axU-Go-TAX"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="aFB-zM-8OT" secondAttribute="bottom" constant="-9" id="ntZ-eP-Ha5"/>
+                    <constraint firstItem="aFB-zM-8OT" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="y8H-ua-hgo"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="txtView" destination="wXD-xm-3rz" id="d0i-tS-07O"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="dividing-line.png" width="320" height="1"/>
+    </resources>
+</document>

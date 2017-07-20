@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="31" id="KGk-i7-Jjw" customClass="OneTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="31"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JIH-UP-tvp">
+                        <rect key="frame" x="0.0" y="0.0" width="100" height="30"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="Kfw-k5-XXD"/>
+                            <constraint firstAttribute="height" constant="30" id="pW1-xi-220"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JpQ-in-ExQ">
+                        <rect key="frame" x="100" y="0.0" width="214" height="30"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="gti-QO-ZZT"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lqq-zv-5Z1">
+                        <rect key="frame" x="269" y="-1" width="43" height="31"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="43" id="pFy-Np-LWb"/>
+                        </constraints>
+                        <state key="normal" title="Button" image="scan.png"/>
+                    </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dividing-line.png" translatesAutoresizingMaskIntoConstraints="NO" id="vEA-EE-C2b">
+                        <rect key="frame" x="0.0" y="29" width="320" height="1"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="apG-Wp-i0z"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <animations/>
+                <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="vEA-EE-C2b" secondAttribute="trailing" constant="-8" id="2gX-3x-BLo"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="JpQ-in-ExQ" secondAttribute="trailing" constant="-2" id="3Ef-S6-IA3"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="4VA-FM-qfD"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Lqq-zv-5Z1" secondAttribute="bottom" constant="-8" id="6nm-VF-pTN"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="JpQ-in-ExQ" secondAttribute="bottom" constant="-8" id="AGE-Cg-oFK"/>
+                    <constraint firstItem="vEA-EE-C2b" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="Bbu-bT-FC5"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="leading" secondItem="JIH-UP-tvp" secondAttribute="trailing" id="Kd7-jB-dNC"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="OkY-Qg-isG"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="leading" secondItem="JIH-UP-tvp" secondAttribute="trailing" id="Qt2-oP-fte"/>
+                    <constraint firstItem="JIH-UP-tvp" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="U0f-wF-ln1"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="JpQ-in-ExQ" secondAttribute="trailing" constant="-2" id="ZKK-bO-ov6"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="JpQ-in-ExQ" secondAttribute="bottom" constant="-8" id="au2-No-NQ1"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="vEA-EE-C2b" secondAttribute="bottom" constant="-8" id="fKo-jQ-fDs"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="fmv-wu-2l5"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="JpQ-in-ExQ" secondAttribute="trailing" constant="-2" id="hIs-BZ-baj"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="JpQ-in-ExQ" secondAttribute="bottom" constant="-8" id="hyH-7R-wsq"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="leading" secondItem="JIH-UP-tvp" secondAttribute="trailing" id="loX-dx-WpY"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="mBv-LT-dA9"/>
+                    <constraint firstItem="JIH-UP-tvp" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="mCq-2v-8VA"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="JpQ-in-ExQ" secondAttribute="trailing" constant="-2" id="rVZ-4e-uWn"/>
+                    <constraint firstItem="JpQ-in-ExQ" firstAttribute="leading" secondItem="JIH-UP-tvp" secondAttribute="trailing" id="sdi-S3-ggu"/>
+                    <constraint firstItem="Lqq-zv-5Z1" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="uKv-IR-veU"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="JIH-UP-tvp" secondAttribute="bottom" constant="-8" id="uXo-cT-9Hg"/>
+                    <constraint firstItem="Lqq-zv-5Z1" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-9" id="xDI-3Y-4vB"/>
+                </constraints>
+            </tableViewCellContentView>
+            <animations/>
+            <connections>
+                <outlet property="EWMBtn" destination="Lqq-zv-5Z1" id="IfK-hr-6Ip"/>
+                <outlet property="label" destination="JIH-UP-tvp" id="2CO-36-tnc"/>
+                <outlet property="textfield" destination="JpQ-in-ExQ" id="0C3-Cr-NKY"/>
+            </connections>
+            <point key="canvasLocation" x="329" y="276.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="dividing-line.png" width="320" height="1"/>
+        <image name="scan.png" width="46" height="46"/>
+    </resources>
+</document>

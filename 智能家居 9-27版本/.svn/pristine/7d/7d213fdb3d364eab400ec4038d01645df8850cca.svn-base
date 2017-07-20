@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="CollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="115" height="109"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="115" height="109"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qM3-Fv-Arp">
+                        <rect key="frame" x="0.0" y="80" width="115" height="29"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="29" id="b3U-Wr-j06"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mle-uW-HSy">
+                        <rect key="frame" x="0.0" y="0.0" width="115" height="77"/>
+                    </imageView>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="qM3-Fv-Arp" secondAttribute="bottom" id="LZd-tl-xbB"/>
+                <constraint firstItem="qM3-Fv-Arp" firstAttribute="top" secondItem="Mle-uW-HSy" secondAttribute="bottom" constant="3" id="Puu-E7-NQd"/>
+                <constraint firstItem="qM3-Fv-Arp" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="cjB-Ii-Oyz"/>
+                <constraint firstItem="Mle-uW-HSy" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="dUT-kE-9js"/>
+                <constraint firstAttribute="trailing" secondItem="Mle-uW-HSy" secondAttribute="trailing" id="m7s-uk-K16"/>
+                <constraint firstItem="Mle-uW-HSy" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="mQn-r3-YiS"/>
+                <constraint firstAttribute="trailing" secondItem="qM3-Fv-Arp" secondAttribute="trailing" id="xxU-UQ-SPo"/>
+            </constraints>
+            <size key="customSize" width="115" height="109"/>
+            <connections>
+                <outlet property="imageView" destination="Mle-uW-HSy" id="8LI-av-D1h"/>
+                <outlet property="label" destination="qM3-Fv-Arp" id="52V-fl-CHd"/>
+            </connections>
+            <point key="canvasLocation" x="358.5" y="309.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

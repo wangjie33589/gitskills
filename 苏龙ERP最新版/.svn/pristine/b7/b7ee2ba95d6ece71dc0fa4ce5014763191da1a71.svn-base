@@ -1,0 +1,35 @@
+//
+//  workTaskVC.h
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/28.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface workTaskVC : UIViewController<UIScrollViewDelegate>{
+    
+    UIScrollView *_scollview;
+    UISegmentedControl *_segControl;
+    BOOL searchisEding;
+    BOOL isfirstVC;
+
+
+
+
+}
+- (IBAction)addBtn:(id)sender;
+
+- (id)initWithUrl:(NSString *)url title:(NSString *)titleStr;
+
+
+@property (weak, nonatomic) IBOutlet UIImageView *topImageView;
+-(void)TAG:(int)i;
+    
+    
+- (IBAction)gobckBtn:(id)sender;
+@property(nonatomic ,retain)NSMutableArray *dataArray;
+@property(nonatomic,retain)NSMutableArray *allArray;
+@property(nonatomic,retain)NSMutableArray *ALLMODELARRAY;
+@end

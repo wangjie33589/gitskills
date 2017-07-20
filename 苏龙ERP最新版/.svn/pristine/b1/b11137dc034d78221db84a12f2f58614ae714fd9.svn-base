@@ -1,0 +1,29 @@
+//
+//  handelVC.h
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "detilModel.h"
+
+@interface handelVC : UIViewController{
+
+    __weak IBOutlet UITextView *compelteview;
+
+
+}
+-(id)initWithDataSourse:(NSMutableArray *)arr;
+@property(nonatomic,retain)detilModel *detilmodel;
+@property(nonatomic,retain)NSMutableArray *dataARR;
+@property (weak, nonatomic) IBOutlet UILabel *firstLab;
+@property (weak, nonatomic) IBOutlet UILabel *secondLab;
+@property (weak, nonatomic) IBOutlet UILabel *ThirdLab;
+@property (weak, nonatomic) IBOutlet UILabel *fourLab;
+@property (strong, nonatomic) IBOutlet UITextView *content;
+@property (weak, nonatomic) IBOutlet UITextView *complete;
+@property (weak, nonatomic) IBOutlet UIView *completView;
+
+@end

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TypeViewdetilelVC">
+            <connections>
+                <outlet property="itemTable" destination="txo-rB-zdh" id="Dct-X9-mK9"/>
+                <outlet property="typeTable" destination="wwh-j2-yjd" id="73W-kT-Tr3"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dividing-line.png" translatesAutoresizingMaskIntoConstraints="NO" id="xZG-ig-FUt">
+                    <rect key="frame" x="130" y="0.0" width="5" height="480"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="5" id="xnd-4j-1CI"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="5" id="zBy-Uh-Ya9"/>
+                    </constraints>
+                </imageView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="txo-rB-zdh">
+                    <rect key="frame" x="135" y="0.0" width="185" height="480"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wwh-j2-yjd">
+                    <rect key="frame" x="0.0" y="0.0" width="130" height="480"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="130" id="CHU-oN-7uG"/>
+                    </constraints>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="xZG-ig-FUt" secondAttribute="bottom" id="34d-ZP-fa7"/>
+                <constraint firstItem="wwh-j2-yjd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="7bz-Rh-gh0"/>
+                <constraint firstAttribute="bottom" secondItem="xZG-ig-FUt" secondAttribute="bottom" id="8Kn-xV-t41"/>
+                <constraint firstItem="txo-rB-zdh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="DWT-ni-oHs"/>
+                <constraint firstItem="wwh-j2-yjd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Hpg-Gx-E7L"/>
+                <constraint firstItem="xZG-ig-FUt" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="IMh-u3-bDm"/>
+                <constraint firstAttribute="bottom" secondItem="txo-rB-zdh" secondAttribute="bottom" id="RCK-1B-rDF"/>
+                <constraint firstItem="xZG-ig-FUt" firstAttribute="leading" secondItem="wwh-j2-yjd" secondAttribute="trailing" id="cGU-qe-WOe"/>
+                <constraint firstItem="txo-rB-zdh" firstAttribute="leading" secondItem="xZG-ig-FUt" secondAttribute="trailing" id="h4o-Xn-kwr"/>
+                <constraint firstItem="xZG-ig-FUt" firstAttribute="leading" secondItem="wwh-j2-yjd" secondAttribute="trailing" id="jsY-SV-gwm"/>
+                <constraint firstAttribute="bottom" secondItem="wwh-j2-yjd" secondAttribute="bottom" id="mI9-gP-W9h"/>
+                <constraint firstItem="xZG-ig-FUt" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qIb-80-qXT"/>
+                <constraint firstAttribute="trailing" secondItem="txo-rB-zdh" secondAttribute="trailing" id="xzE-f0-dsJ"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="dividing-line.png" width="320" height="1"/>
+    </resources>
+</document>

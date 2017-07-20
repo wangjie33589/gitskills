@@ -1,0 +1,23 @@
+//
+//  reworkVC.h
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface reworkVC : UIViewController<UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *firstLab;
+@property (weak, nonatomic) IBOutlet UILabel *seconrLab;
+@property (weak, nonatomic) IBOutlet UILabel *ThirdLab;
+@property (weak, nonatomic) IBOutlet UILabel *fourlab;
+@property (weak, nonatomic) IBOutlet UITextView *contentView;
+-(id)initWithDataSourse:(NSMutableArray *)arr;
+@property(nonatomic,retain)NSMutableArray *dataARR;
+@property (strong, nonatomic) IBOutlet UITextField *fanGongTextField;
+
+@property (strong, nonatomic) IBOutlet UIView *myView;
+
+@end

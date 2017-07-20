@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="KYBindPhoneViewController">
+            <connections>
+                <outlet property="phone" destination="ar6-Vy-BYa" id="MdA-P8-VE9"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="请绑定手机号" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ar6-Vy-BYa">
+                    <rect key="frame" x="20" y="20" width="560" height="30"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="LQr-X2-FTw"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="Ld4-yk-4dZ"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="cQo-Gd-90f"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="fWb-zV-c49"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ar6-Vy-BYa" secondAttribute="trailing" id="0qi-Q9-shc"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3WC-ME-tOj"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="493-iv-Kgf"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="50o-Vr-bpM"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="6bi-vC-0nD"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="Lex-fJ-hZO"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="RYC-TD-UtD"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="V6J-2h-rbO"/>
+                <constraint firstItem="ar6-Vy-BYa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="1" id="cks-jn-CAD"/>
+                <constraint firstAttribute="trailing" secondItem="ar6-Vy-BYa" secondAttribute="trailing" id="elL-zk-Lg6"/>
+                <constraint firstAttribute="trailing" secondItem="ar6-Vy-BYa" secondAttribute="trailing" constant="20" id="sOj-Fc-61z"/>
+                <constraint firstAttribute="trailing" secondItem="ar6-Vy-BYa" secondAttribute="trailing" constant="20" id="xuv-6Z-xH2"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="0qi-Q9-shc"/>
+                    <exclude reference="3WC-ME-tOj"/>
+                    <exclude reference="493-iv-Kgf"/>
+                    <exclude reference="6bi-vC-0nD"/>
+                    <exclude reference="RYC-TD-UtD"/>
+                    <exclude reference="cks-jn-CAD"/>
+                    <exclude reference="elL-zk-Lg6"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+</document>

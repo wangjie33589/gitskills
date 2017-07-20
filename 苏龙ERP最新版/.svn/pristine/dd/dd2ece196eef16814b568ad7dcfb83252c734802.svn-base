@@ -1,0 +1,276 @@
+//
+//  AddRowViewController.m
+//  Proxy_ios
+//
+//  Created by 刘康.Mac on 15/11/30.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import "AddRowViewController.h"
+
+@interface AddRowViewController ()
+{
+    CGRect xmlContens;
+    UILabel* contens;
+    NSArray* dataArray;
+}
+@end
+
+@implementation AddRowViewController
+
+- (id)initWithXmlStr:(NSString *)xml data:(NSDictionary *)aData type:(NSArray *)aType
+{
+    self = [super init];
+    if (self) {
+        xmlStr = xml;
+        data = aData;
+        dataArray = aType;
+    }
+    return self;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    
+    [[App ddMenu] setEnableGesture:NO];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"添加数据";
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self initView];
+}
+- (void)initView
+{
+//    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
+//                                    initWithTitle:@"返回"
+//                                    style:UIBarButtonItemStyleDone
+//                                    target:self
+//                                    action:@selector(go_back)];
+//    
+//    [leftButton setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
+//                                        [UIFont systemFontOfSize:15], NSFontAttributeName,
+//                                        [UIColor whiteColor], NSForegroundColorAttributeName,
+//                                        nil]
+//                              forState:UIControlStateNormal];
+//    self.navigationItem.leftBarButtonItem = leftButton;
+    
+    typeArray = [[NSMutableArray alloc] init];
+    for (NSInteger index = 0; index < dataArray.count; index ++) {
+        if ([[dataArray[index] objectForKey:@"APPDBFIELDSHOW"] isEqualToString:@"true"]) {
+            [typeArray addObject:dataArray[index]];
+        }
+    }
+    
+    //    xml控件
+    for (NSInteger m = 0; m < typeArray.count; m ++) {
+        UIButton* xmlView = [UIButton buttonWithType:UIButtonTypeCustom];
+        xmlView.tag = m+1000;
+        NSString* isEdit = [[NSString stringWithFormat:@"%@",[typeArray[m] objectForKey:@"APPDBFIELDEDIT"]] stringByReplacingOccurrencesOfString:@"_" withString:@""];
+        xmlView.userInteractionEnabled = [isEdit isEqual:@"true"]?YES:NO;
+        [xmlView addTarget:self action:@selector(editDataClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:xmlView];
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.textAlignment = NSTextAlignmentLeft;
+        title.tag = 1008611;
+        title.textColor = [UIColor colorWithRed:85/255.0 green:85/255.0 blue:85/255.0 alpha:1];
+        title.text = [NSString stringWithFormat:@"%@:",[typeArray[m] objectForKey:@"APPDBFIELDLABEL"]];
+        title.font = [UIFont systemFontOfSize:14];
+        CGSize titleSize = [self sizeWithStringTitle:[NSString stringWithFormat:@"%@:",[typeArray[m] objectForKey:@"APPDBFIELDLABEL"]] font:title.font sizwLwidth:LWidth/2];
+        title.frame = CGRectMake(5, 8, titleSize.width, titleSize.height);
+        [xmlView addSubview:title];
+        
+        contens = [[UILabel alloc] init];
+        contens.textAlignment = NSTextAlignmentLeft;
+        contens.textColor = [UIColor colorWithRed:171/255.0 green:171/255.0 blue:171/255.0 alpha:1];
+        contens.numberOfLines = 0;
+        contens.font = [UIFont systemFontOfSize:14];
+        contens.tag = m+101;
+        contens.text = @"点击输入内容";
+        [xmlView addSubview:contens];
+        
+        NSString* strMR = [NSString stringWithFormat:@"%@",[typeArray[m] objectForKey:@"APPDBFIELDDEFAULT"]==nil||[[typeArray[m] objectForKey:@"APPDBFIELDDEFAULT"] isEqual:[NSNull null]]?@"0":[typeArray[m] objectForKey:@"APPDBFIELDDEFAULT"]];
+        if ([strMR isEqualToString:@"0"]) {
+        }else if ([strMR isEqualToString:@"1"]) {
+            contens.text = USERNAME;
+        }else if ([strMR isEqualToString:@"2"]) {
+            contens.text = USERGUID;
+        }else if ([strMR isEqualToString:@"3"]) {
+            NSDateFormatter *formatter =[[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+            NSString *currentTime = [formatter stringFromDate:[NSDate date]];
+            contens.text = [NSString stringWithFormat:@"%@",currentTime];
+        }else if ([strMR isEqualToString:@"4"]) {
+            contens.text = @"同意";
+        }
+        
+        if ([isEdit isEqual:@"true"]) {
+            contens.textColor = [UIColor blackColor];
+        }
+        
+        CGSize btnSize = [self sizeWithStringTitle:contens.text font:title.font sizwLwidth:LWidth-15-(title.frame.size.width+title.frame.origin.x)];
+        contens.frame = CGRectMake(title.frame.size.width+10, 8, LWidth-(title.frame.size.width+title.frame.origin.x), btnSize.height);
+        
+        float y = title.frame.size.height>contens.frame.size.height?title.frame.size.height+title.frame.origin.y:contens.frame.size.height+contens.frame.origin.y;
+        xmlView.frame = CGRectMake(0, m==0?0:xmlContens.size.height+xmlContens.origin.y, LWidth, y+9);
+        
+        UIImageView* row = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dividing-line"]];
+        row.frame = CGRectMake(0, xmlView.frame.size.height-1, LWidth, 1);
+        row.alpha = 0.4;
+        row.tag = m+100;
+        [xmlView addSubview:row];
+        [xmlView bringSubviewToFront:row];
+        xmlContens = xmlView.frame;
+    }
+    
+    UIButton* updata = [UIButton buttonWithType:UIButtonTypeCustom];
+    updata.backgroundColor = [UIColor colorWithRed:0.01 green:0.66 blue:1 alpha:1];
+    updata.layer.cornerRadius = 3;
+    updata.layer.masksToBounds = YES;
+    updata.frame = CGRectMake(20, xmlContens.size.height+xmlContens.origin.y+10, (LWidth-60)/2, 30);
+    [updata setTitle:@"保存" forState:0];
+    [updata setTitleColor:[UIColor whiteColor] forState:0];
+    [updata addTarget:self action:@selector(upDataRequest) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:updata];
+    
+    UIButton* back = [UIButton buttonWithType:UIButtonTypeCustom];
+    back.backgroundColor = [UIColor colorWithRed:0.01 green:0.66 blue:1 alpha:1];
+    back.frame = CGRectMake(40+((LWidth-60)/2), xmlContens.size.height+xmlContens.origin.y+10, (LWidth-60)/2, 30);
+    [back setTitle:@"取消" forState:0];
+    back.layer.masksToBounds = YES;
+    back.layer.cornerRadius = 3;
+    [back setTitleColor:[UIColor whiteColor] forState:0];
+    [back addTarget:self action:@selector(go_back) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:back];
+}
+- (void)editDataClick:(UIButton *)sender
+{
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"添加（%@）信息",[typeArray[sender.tag-1000] objectForKey:@"APPDBFIELDLABEL"]] message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* determine = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self refactoringView:sender.tag contens:alert.textFields[0].text];
+    }];
+    
+    UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.textColor = [UIColor blueColor];
+        if ([[typeArray[sender.tag-1000] objectForKey:@"APPDBFIELDCONTROL"] isEqualToString:@"2"])textField.keyboardType = UIKeyboardTypeNumberPad;;
+    }];
+    [self presentViewController:alert animated:YES completion:nil];
+    [alert addAction:determine];
+    [alert addAction:cancel];
+}
+- (CGSize)sizeWithStringTitle:(NSString *)string font:(UIFont *)font sizwLwidth:(float)width
+{
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(width, LHeight)//限制最大的宽度和高度
+                                       options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading  | NSStringDrawingUsesLineFragmentOrigin//采用换行模式
+                                    attributes:@{NSFontAttributeName: font}
+                                       context:nil];
+    return rect.size;
+}
+- (void)upDataRequest
+{
+    [SVProgressHUD showWithStatus:@"修改中..."];
+    NSString* xmlB = @"";
+    for (NSInteger index = 0; index < typeArray.count; index ++) {
+        UILabel* lable = [contens viewWithTag:index+101];
+        if (index==0) {
+            xmlB = [NSString stringWithFormat:@"<%@ type='%@'>%@</%@>",[typeArray[index] objectForKey:@"APPDBFIELDNAME"],[typeArray[index] objectForKey:@"APPDBFIELDCONTROL"],[self uilabelTextStr],[typeArray[index] objectForKey:@"APPDBFIELDNAME"]];
+        }else{
+            
+            xmlB = [NSString stringWithFormat:@"%@<%@ type='%@'>%@</%@>",xmlB,[typeArray[index] objectForKey:@"APPDBFIELDNAME"],[typeArray[index] objectForKey:@"APPDBFIELDCONTROL"],lable.text,[typeArray[index] objectForKey:@"APPDBFIELDNAME"]];
+        }
+    }
+    NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%@%@</Data>",xmlStr,xmlB],@"FormInfo",@"SAVEFORMOTHER",@"Action", nil];
+    NSLog(@"%@",[NSString stringWithFormat:@"%@%@</Data>",xmlStr,xmlB]);
+    MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@/slrd/WorkFlowWebDesigner/ProxyMobile/WorkflowHandler.ashx",HTTPIP] withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if ([[dictt objectForKey:@"success"] integerValue] == 1) {
+            NSNotification *notification =[NSNotification notificationWithName:@"change" object:nil userInfo:nil];
+            [[NSNotificationCenter defaultCenter] postNotification:notification];
+            [self.navigationController popViewControllerAnimated:YES];
+            [SVProgressHUD dismiss];
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+    };
+}
+- (void)go_back
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (NSString *)uilabelTextStr
+{
+    for (id view in [self.view subviews]) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton* mobileView = (UIButton *)view;
+            if (mobileView.tag==1000) {
+                for (id aView in [mobileView subviews]) {
+                    if ([aView isKindOfClass:[UILabel class]]) {
+                        UILabel* mobileLabel = (UILabel *)aView;
+                        if (mobileLabel.tag == 101) {
+                            return mobileLabel.text;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return nil;
+}
+- (void)refactoringView:(NSInteger)tag contens:(NSString *)str
+{
+    for (id view in [self.view subviews]) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton* mobileView = (UIButton *)view;
+            float y = 0.0;
+            if (mobileView.tag==tag) {
+                for (id aView in [mobileView subviews]) {
+                    if ([aView isKindOfClass:[UILabel class]]) {
+                        UILabel* mobileLabel = (UILabel *)aView;
+                        if (mobileLabel.tag == tag-899) {
+                            mobileLabel.text = str;
+                            CGSize size = [self sizeWithStringTitle:str font:[UIFont systemFontOfSize:15] sizwLwidth:LWidth-15-mobileLabel.frame.origin.x];
+                            y = size.height>mobileLabel.frame.size.height?mobileLabel.frame.origin.y+size.height+9:mobileView.frame.origin.y;
+                            mobileLabel.frame = CGRectMake(mobileLabel.frame.origin.x, mobileLabel.frame.origin.y, size.width, size.height);
+                            mobileView.frame = CGRectMake(mobileView.frame.origin.x, mobileView.frame.origin.y, LWidth, size.height+18);
+                            xmlContens = mobileView.frame;
+                        }
+                    }
+                }
+                for (id aView in [mobileView subviews]) {
+                    if ([aView isKindOfClass:[UIImageView class]]) {
+                        UIImageView* mobileIV = (UIImageView *)aView;
+                        if (mobileIV.tag == tag-899) {
+                            mobileIV.frame = CGRectMake(0, xmlContens.size.height-1, LWidth, 1);
+                        }
+                    }
+                }
+            }
+            if (mobileView.tag>tag) {
+                mobileView.frame = CGRectMake(mobileView.frame.origin.x, xmlContens.origin.y+xmlContens.size.height, LWidth, mobileView.frame.size.height);
+                xmlContens = mobileView.frame;
+            }
+        }
+    }
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

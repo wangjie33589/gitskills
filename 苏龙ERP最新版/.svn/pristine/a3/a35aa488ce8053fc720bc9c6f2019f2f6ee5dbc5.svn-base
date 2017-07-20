@@ -1,0 +1,214 @@
+//
+//  work_task_first_VC.m
+//  Proxy_ios
+//
+//  Created by sciyonSoft on 16/1/21.
+//  Copyright © 2016年 keyuan. All rights reserved.
+//
+
+#import "work_task_first_VC.h"
+#import "DetilVC.h"
+#import "MJRefresh.h"
+#import "BTTableViewCell.h"
+
+@interface work_task_first_VC ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>{
+
+  NSInteger startIndex;
+    NSMutableArray* showArray;//数据展示数组
+    NSString *searStr;
+    NSString *TYPE;
+    }
+
+@end
+
+@implementation work_task_first_VC
+-(id)initWithAType:(NSString *)AType{
+    
+    
+    self =[super init];
+    if (self) {
+        
+        TYPE=AType;
+    }
+    
+    return self;
+    
+    
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    startIndex=1;
+    self.MySearchBar.delegate=self;
+    self.MySearchBar.returnKeyType = UIReturnKeyDone;
+    searStr=@"";
+    self.myTableView.delegate = self;
+    self.myTableView.dataSource = self;
+    self.myTableView.sectionHeaderHeight = 30.0f;
+    self.myTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+  
+    [self.myTableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [self.myTableView setTableHeaderView:[[UIView alloc]initWithFrame:CGRectZero ]];
+    [self.myTableView addHeaderWithTarget:self action:@selector(upRefresh:)];
+    [self.myTableView addFooterWithTarget:self action:@selector(downRefresh:)];
+    self.myTableView.rowHeight=90;
+    [self.myTableView registerNib:[UINib nibWithNibName:@"BTTableViewCell" bundle:nil] forCellReuseIdentifier:@"BTCELL"];
+    
+    
+    // [self.view addSubview:dataTableView];
+    [self search];
+    
+}
+
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+
+    return showArray.count;
+}
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+     BTTableViewCell *cell =[tableView dequeueReusableCellWithIdentifier:@"BTCELL"];
+    cell.firstLab.text=showArray[indexPath.row][@"FTITLE"];
+    cell.ThirdLab.text=[NSString stringWithFormat:@"状态:%@",showArray[indexPath.row][@"FSTATENAME"]];
+    cell.selectionStyle= UITableViewCellSelectionStyleNone;
+
+    if ([TYPE isEqualToString:@"1"]) {
+        
+        cell.secondLab.text=[NSString stringWithFormat:@"分配人:%@",showArray[indexPath.row][@"FSUNAME"]];
+        
+    }else{
+        cell.secondLab.text=[NSString stringWithFormat:@"处理人:%@",showArray[indexPath.row][@"FSUNAME"]];
+    
+    }
+     
+    return cell;
+
+
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    DetilVC *detilvc =[[DetilVC alloc]initWithArray:showArray[indexPath.row]];
+    [self.navigationController pushViewController:detilvc animated:YES];
+    
+    
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+#pragma mark ------ 下拉刷新
+- (void)upRefresh:(id)sender
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self search];
+        [self.myTableView headerEndRefreshing];
+    });
+}
+#pragma mark ------ 上拉加载
+- (void)downRefresh:(id)sender
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self requestShowDataRefresh];
+        [self.myTableView footerEndRefreshing];
+    });
+}
+
+#pragma mark ------------------ UISearchBarDelegate
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
+    [searchBar setShowsCancelButton:YES];
+    
+    for(id cc in [searchBar.subviews[0] subviews])
+    {
+        if([cc isKindOfClass:[UIButton class]])
+        {
+            UIButton *btn = (UIButton *)cc;
+            [btn setTitle:@"取消"  forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(cancel) forControlEvents: UIControlEventTouchUpInside];
+            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        }
+    }
+}
+-(void)cancel{
+    searStr=@"";
+
+    [self search];
+
+
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar{
+    [searchBar setShowsCancelButton:NO];
+    self.navigationItem.rightBarButtonItem = nil;
+    [self.view endEditing:YES];
+}
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{ searStr=@"";
+    searStr=searchBar.text;
+    [self search];
+    [self.view endEditing:YES];
+}
+
+
+
+- (void)search
+{
+    [SVProgressHUD showWithStatus:@"努力加载中..."];
+    NSString *contents;
+    if ([searStr isEqualToString:@""]) {
+        contents=@"";
+        
+        
+        
+    }else{
+        contents=searStr;
+        
+    }
+  
+    NSDictionary* dict =[NSDictionary dictionaryWithObjectsAndKeys:@"GETQUERYWORKTASKSQL",@"Action",@"10",@"Pagesize",@"1",@"Pageindex",@"DESC",@"Softtype",@"FEDITTIME",@"Softfield",contents,@"FTITLE",TYPE,@"TYPE", nil];
+        MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@%@//OA/RSM/ProxyMobile/PaginationProxy.ashx",HTTPIP,SLRD] withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+                if ([[dictt objectForKey:@"success"] integerValue] == 1) {
+            [showArray removeAllObjects];
+            showArray = [NSMutableArray arrayWithArray:[dictt objectForKey:@"data"]];
+            NSLog(@"SHOWSARRAY===%@",showArray);
+            [self.myTableView reloadData];
+            [SVProgressHUD dismiss];
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+    };
+}
+//下拉刷新，上啦刷新加载
+- (void)requestShowDataRefresh
+{
+    startIndex = startIndex+1;
+    NSString* pageStr = [NSString stringWithFormat:@"%ld",(long)startIndex];
+    [SVProgressHUD showWithStatus:@"努力加载中..."];
+    NSDictionary* dict =[NSDictionary dictionaryWithObjectsAndKeys:@"GETQUERYWORKTASKSQL",@"Action",@"10",@"Pagesize",pageStr,@"Pageindex",@"DESC",@"Softtype",@"FEDITTIME",@"Softfield",searStr,@"FTITLE",TYPE,@"TYPE", nil];
+
+    MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@%@/OA/RSM/ProxyMobile/PaginationProxy.ashx",HTTPIP,SLRD] withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if ([[dictt objectForKey:@"success"] integerValue] == 1) {
+            NSMutableArray* array = [dictt objectForKey:@"data"];
+            NSLog(@"SSSSSSSS=%@",array);
+            if (array.count < 10) {
+                [SVProgressHUD showSuccessWithStatus:@"加载到底了"];
+                for (NSUInteger i = 0; i < array.count; i ++) {
+                    [showArray addObject:[array objectAtIndex:i]];
+                }
+                [_myTableView reloadData];
+            }else{
+                for (NSUInteger i = 0; i < array.count; i ++) {
+                    [showArray addObject:[array objectAtIndex:i]];
+                }
+                [self.myTableView reloadData];
+            }
+            [SVProgressHUD dismiss];
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+    };
+}
+
+@end

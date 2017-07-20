@@ -1,0 +1,90 @@
+//
+//  UpData.m
+//  Proxy_ios
+//
+//  Created by E-Bans on 15/12/1.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import "UpData.h"
+
+@implementation UpData
+
++ (void)initWithType:(NSString *)aType xmlStr:(NSDictionary *)xmlData
+{
+    if ([aType isEqualToString:@"0"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"1"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"2"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"3"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"4"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"6"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"8"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"9"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"11"]) {
+        [[self alloc] request:xmlData];
+    }else if ([aType isEqualToString:@"20"]) {
+        [[self alloc] request:xmlData];
+    }
+}
+- (void)request:(NSDictionary *)dict
+{
+    MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@/slrd/WorkFlowWebDesigner/ProxyMobile/WorkflowHandler.ashx",HTTPIP] withParameter:dict];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        if ([[dictt objectForKey:@"success"] integerValue] == 1) {
+            [SVProgressHUD dismiss];
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+    };
+}
+- (void)uploadType_0
+{
+    [self request:nil];
+}
+- (void)uploadType_1
+{
+    [self request:nil];
+}
+- (void)uploadType_2
+{
+    [self request:nil];
+}
+- (void)uploadType_3
+{
+    [self request:nil];
+}
+- (void)uploadType_4
+{
+    [self request:nil];
+}
+- (void)uploadType_6
+{
+    [self request:nil];
+}
+- (void)uploadType_8
+{
+    [self request:nil];
+}
+- (void)uploadType_9
+{
+    [self request:nil];
+}
+- (void)uploadType_11
+{
+    [self request:nil];
+}
+- (void)uploadType_20
+{
+    [self request:nil];
+}
+
+@end

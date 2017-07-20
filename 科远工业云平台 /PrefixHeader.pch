@@ -1,0 +1,57 @@
+//
+//  PrefixHeader.pch
+//  KYSYCloud
+//
+//  Created by sciyonSoft on 16/2/4.
+//  Copyright © 2016年 sciyonSoft. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+
+#import "AppDelegate.h"
+#import "SVProgressHUD.h"
+#import "MyRequest.h"
+#import "CommonTool.h"
+#import "XMLDictionary.h"
+
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+
+#define APP_WINOW [[[UIApplication sharedApplication]delegate]window]
+#define LHIGHT [UIScreen mainScreen].bounds.size.height
+#define LWIDTH [UIScreen mainScreen].bounds.size.width
+//#define  HTTPIP @"http://10.19.12.3:20085/demo"
+//#define  HTTPIP @"10.1.42.38"
+//#define  HTTPIP @"http://10.1.41.30/SciyonCloud"
+
+//#define  HTTPIP @"http://221.226.212.74:20085/demo"
+
+//#define  HTTPIP @"http://221.226.212.74:20085/demo"
+
+#define  HTTPIP [[NSUserDefaults standardUserDefaults] objectForKey:@"ip"]
+//#define LOGIN_URL @"/demo"
+#define LOGIN_URL @"/SciyonCloud"
+#define SERVER_URL @"/MobileAPI/Proxy.aspx"
+#define UPLOAD_URL @"/MobileAPI/UploadFile.ashx"
+#define MAP_URL @"/MobileAPI/DeviceLocation/RealMonitor.aspx"
+#define ANLISE_URL @"/SciyonCharts/Config/DisplayPage.aspx"
+#define USER_DEFAULTS [NSUserDefaults standardUserDefaults]
+#define SIM_CODE [[NSUserDefaults standardUserDefaults] objectForKey:@"Code"]
+#define YZM [[NSUserDefaults standardUserDefaults] objectForKey:@"YZM"]
+#define ERROR [[NSUserDefaults standardUserDefaults] objectForKey:@"ERROR"]
+#define PASSWORD [[NSUserDefaults standardUserDefaults] objectForKey:@"PASSWORD"]
+#define USER_NAME [[NSUserDefaults standardUserDefaults] objectForKey:@"USER_NAME"]
+#define XML_STR [[NSUserDefaults standardUserDefaults] objectForKey:@"XML"]
+#define GUID [[NSUserDefaults standardUserDefaults] objectForKey:@"GUID"]
+#define IS_LOGIN [[NSUserDefaults standardUserDefaults] objectForKey:@"login"]
+#define SRVER_FILE_LOGINCARTION @"../../../UserUploadFiles/"
+
+#define FILE_M [NSFileManager defaultManager]
+
+#define FLAG  @"[CONNECT]"
+
+#endif /* PrefixHeader_pch */

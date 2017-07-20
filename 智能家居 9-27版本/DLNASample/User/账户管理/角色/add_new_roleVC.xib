@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="add_new_roleVC">
+            <connections>
+                <outlet property="headerImg" destination="j7h-vV-9na" id="ZwC-vL-ldI"/>
+                <outlet property="rolename" destination="yZa-wI-cT8" id="2XO-gM-QK0"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="请输入角色名：" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yZa-wI-cT8">
+                    <rect key="frame" x="115" y="60" width="224" height="30"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="ABZ-cY-TQQ"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BPb-k4-J3o">
+                    <rect key="frame" x="108" y="91" width="224" height="1"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.0078431372549019607" green="0.72941176470588232" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="HOm-AU-h0r"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j7h-vV-9na">
+                    <rect key="frame" x="20" y="20" width="70" height="70"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="Jvo-K4-jZ6"/>
+                        <constraint firstAttribute="width" constant="60" id="dqZ-YX-BgM"/>
+                        <constraint firstAttribute="height" constant="60" id="f5m-Kj-1vm"/>
+                        <constraint firstAttribute="width" constant="70" id="mB1-XE-AOn"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="10-1-角色管理-_03.png">
+                        <color key="titleColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="dqZ-YX-BgM"/>
+                            <exclude reference="f5m-Kj-1vm"/>
+                        </mask>
+                    </variation>
+                    <connections>
+                        <action selector="changeImgBtn:" destination="-1" eventType="touchUpInside" id="SC1-HZ-zBm"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="j7h-vV-9na" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="DZu-QW-7kB"/>
+                <constraint firstItem="yZa-wI-cT8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="63" id="Dr1-y3-N8E"/>
+                <constraint firstAttribute="trailing" secondItem="yZa-wI-cT8" secondAttribute="trailing" constant="36" id="PWk-Fi-GA1"/>
+                <constraint firstAttribute="trailing" secondItem="BPb-k4-J3o" secondAttribute="trailing" constant="43" id="UIo-WN-XR7"/>
+                <constraint firstItem="j7h-vV-9na" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-4" id="WLa-9N-iZW"/>
+                <constraint firstItem="BPb-k4-J3o" firstAttribute="top" secondItem="yZa-wI-cT8" secondAttribute="bottom" constant="1" id="WcT-vs-pbf"/>
+                <constraint firstItem="j7h-vV-9na" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="cfN-CT-bzS"/>
+                <constraint firstItem="BPb-k4-J3o" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="108" id="hT3-mw-VFI"/>
+                <constraint firstItem="yZa-wI-cT8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="60" id="nTQ-IQ-6rq"/>
+                <constraint firstItem="BPb-k4-J3o" firstAttribute="width" secondItem="yZa-wI-cT8" secondAttribute="width" id="tgl-OJ-KUQ"/>
+                <constraint firstAttribute="trailing" secondItem="yZa-wI-cT8" secondAttribute="trailing" constant="8" id="uWA-fh-9pA"/>
+                <constraint firstItem="j7h-vV-9na" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="-3" id="zEs-DB-bKG"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="WLa-9N-iZW"/>
+                    <exclude reference="zEs-DB-bKG"/>
+                    <exclude reference="Dr1-y3-N8E"/>
+                    <exclude reference="uWA-fh-9pA"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+    <resources>
+        <image name="10-1-角色管理-_03.png" width="137" height="138"/>
+    </resources>
+</document>

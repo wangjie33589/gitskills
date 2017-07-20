@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[Home_Home_ViewController pushMenuViewController:titleUp:]:Home_Home_ViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "FLAG">
+            </PersistentString>
+            <PersistentString
+               value = "[title substringWithRange:NSMakeRange(7, 15)]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

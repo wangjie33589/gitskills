@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="settingViewController">
+            <connections>
+                <outlet property="myTable" destination="bcl-ZU-mvx" id="Y0Q-Iu-c1J"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bcl-ZU-mvx">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="341"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="341" id="4JO-aC-Fmp"/>
+                    </constraints>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Aoe-nz-pxK">
+                    <rect key="frame" x="44" y="355" width="232" height="30"/>
+                    <animations/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="bWh-qy-7oX"/>
+                    </constraints>
+                    <state key="normal" title="注销登录">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="titleShadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="goBack:" destination="-1" eventType="touchUpInside" id="yZR-35-Kbd"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" red="0.93613457207207207" green="0.93613457207207207" blue="0.93613457207207207" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="bcl-ZU-mvx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="XGT-2h-k8A"/>
+                <constraint firstItem="Aoe-nz-pxK" firstAttribute="top" secondItem="bcl-ZU-mvx" secondAttribute="bottom" constant="14" id="cEG-PX-X3Q"/>
+                <constraint firstAttribute="trailing" secondItem="Aoe-nz-pxK" secondAttribute="trailing" constant="44" id="mHX-Hl-jMh"/>
+                <constraint firstItem="Aoe-nz-pxK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="44" id="sfo-cZ-H1P"/>
+                <constraint firstAttribute="trailing" secondItem="bcl-ZU-mvx" secondAttribute="trailing" id="siD-ex-rdT"/>
+                <constraint firstItem="bcl-ZU-mvx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="yZd-SQ-OW7"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="229" y="324"/>
+        </view>
+    </objects>
+</document>

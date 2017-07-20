@@ -1,0 +1,140 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		3B0086D21DE6B89600567679 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		3B0086D31DE6B89600567679 /* cybergarage */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cybergarage; sourceTree = "<group>"; };
+		3B0086D41DE6B89600567679 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		3B0086CC1DE6B89600567679 = {
+			isa = PBXGroup;
+			children = (
+				3B0086D21DE6B89600567679 /* .DS_Store */,
+				3B0086D31DE6B89600567679 /* cybergarage */,
+				3B0086D41DE6B89600567679 /* Makefile.am */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		3B0086D11DE6B89600567679 /* include */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 3B0086D51DE6B89600567679 /* Build configuration list for PBXLegacyTarget "include" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/sciyonSoft/Documents/智能家居 9-27版本/clinkc/lib/ios/xcode/include";
+			dependencies = (
+			);
+			name = include;
+			passBuildSettingsInEnvironment = 1;
+			productName = include;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		3B0086CD1DE6B89600567679 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 3B0086D01DE6B89600567679 /* Build configuration list for PBXProject "include" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 3B0086CC1DE6B89600567679;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3B0086D11DE6B89600567679 /* include */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		3B0086CE1DE6B89600567679 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		3B0086CF1DE6B89600567679 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		3B0086D61DE6B89600567679 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = include;
+			};
+			name = Debug;
+		};
+		3B0086D71DE6B89600567679 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = include;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3B0086D01DE6B89600567679 /* Build configuration list for PBXProject "include" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B0086CE1DE6B89600567679 /* Debug */,
+				3B0086CF1DE6B89600567679 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3B0086D51DE6B89600567679 /* Build configuration list for PBXLegacyTarget "include" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B0086D61DE6B89600567679 /* Debug */,
+				3B0086D71DE6B89600567679 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3B0086CD1DE6B89600567679 /* Project object */;
+}

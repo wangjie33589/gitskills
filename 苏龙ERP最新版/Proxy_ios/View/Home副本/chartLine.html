@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+            <title>实时负荷</title>
+            </head>
+    <body>
+        <div id="main" style="height:480px"></div>
+    </body>
+    <script type="text/javascript"  src="echarts.js"></script>
+    <script>
+        var xDt = 40;//X轴默认最大值
+        var isFirstInit = false;//判断是否是第一次加载图表
+        var myChart = echarts.init(document.getElementById('main'));
+        // 修改成功；
+        
+        
+        var myXdatas = [];
+        for (var i = 0;i<24;i++){
+            var temp = '';
+            if (i < 10){
+                temp = '0' + i ;//GAODONG
+            }else {
+                temp = i;
+            }
+            temp = temp + ':';
+            //temp2 = '00'+':';
+            //temp3='00';
+            for (var j=0;j<60;j++){
+                var temp2 = '';
+                if (j < 10){
+                    temp2 = '0' + '0';//j;
+                } else {
+                    temp2 = '00';
+                }
+                temp2 = temp2 + ':';
+                for (var t=0;t < 12;t++) {
+                    var temp3 = '';
+                    if (t < 2) {
+                        temp3 = temp + temp2 + '0' + '0';//(t * 5);//GAIDON
+                    } else {
+                        temp3 = temp + temp2 + '0'+'0';//(t * 5);//GAIDON
+                    }
+                    myXdatas.push(temp3);
+                }
+            }
+        }
+    //    var ttt ='432.903503,376.056671,471.414856,486.143097,464.597015,499.150024,382.615143,467.319275,496.113464,451.046783,432.084106,482.345032,439.768646,440';
+    //    addData(ttt);
+    
+    /*
+     * 加载图表
+     * @param xDatas x轴数据
+     * @param yDatas y轴数据
+     * @param datas  具体数据
+     */
+    function initChart(addDatas){
+        var tttt = addDatas.split('?');
+        var aa=tttt[0].split(',');
+        var bb=tttt[1].split(',');
+        var firstData=tttt[0];
+        var seconData=tttt[1];
+        var arr = [];
+        for (var t=0;t<aa.length;t++){
+            arr.push(parseFloat(aa[t]));
+        }
+        var newAddDatas = [];
+        var lastData;//数组最后一个数据
+        var topNum,nowNum;//上次和这次数据
+        for (var i=0;i<arr.length;i++) {
+            nowNum = arr[i];
+            if (i == 0) {
+                topNum = arr[i];
+                continue;
+            } else if (i == arr.length -1){
+                lastData = arr[i];
+                break;
+            } else {
+                var tempNum = (nowNum - topNum)/790;//时间差/720
+                var needPushData = 0;
+                for (var t=0;t<790;t++){
+                    if (t == 0){
+                        needPushData = topNum;
+                    } else {
+                        needPushData = needPushData + tempNum;
+                    }
+                    newAddDatas.push(needPushData.toFixed(2));
+                }
+            }
+            topNum = arr[i];
+        }
+        var myDate = new Date();
+        var myMinute = myDate.getMinutes();
+        var mySec = myDate.getSeconds();
+        var countOfSec = (myMinute*60 + mySec);//多余多少秒
+        var countSec =  (countOfSec/5).toFixed(0);
+        var chaNum = lastData -  topNum;
+        var jiaNum = chaNum / countSec;
+        var beginNum = topNum;
+        for (var j = 0;j<countSec;j++){
+            beginNum = beginNum + jiaNum;
+            if (j == countSec -1){
+                newAddDatas.push(lastData.toFixed(2));
+            } else {
+                newAddDatas.push(beginNum.toFixed(2));
+            }
+        }
+        var arr1 = [];
+        for (var t=0;t<bb.length;t++){
+            arr1.push(parseFloat(bb[t]));
+        }
+        var newAddDatas1 = [];
+        var lastData1;//数组最后一个数据
+        var topNum1,nowNum1;//上次和这次数据
+        for (var i=0;i<arr1.length;i++) {
+            nowNum1 = arr1[i];
+            if (i == 0) {
+                topNum1 = arr1[i];
+                continue;
+            } else if (i == arr1.length -1){
+                lastData1 = arr1[i];
+                break;
+            } else {
+                var tempNum = (nowNum1 - topNum1)/790;//时间差/720
+                var needPushData = 0;
+                for (var t=0;t<790;t++){
+                    if (t == 0){
+                        needPushData = topNum1;
+                    } else {
+                        needPushData = needPushData + tempNum;
+                    }
+                    newAddDatas1.push(needPushData.toFixed(2));
+                }
+            }
+            topNum1 = arr1[i];
+        }
+        var myDate = new Date();
+        var myMinute = myDate.getMinutes();
+        var mySec = myDate.getSeconds();
+        var countOfSec = (myMinute*60 + mySec);//多余多少秒
+        var countSec =  (countOfSec/5).toFixed(0);
+        var chaNum = lastData - topNum;
+        var jiaNum = chaNum / countSec;
+        var beginNum = topNum1;
+        for (var j = 0;j<countSec;j++){
+            beginNum = beginNum + jiaNum;
+            if (j == countSec -1){
+                newAddDatas1.push(lastData1.toFixed(2));
+            } else {
+                newAddDatas1.push(beginNum.toFixed(2));
+            }
+        }
+        var option = {
+            //            backgroundColor:'#0052A3',
+            tooltip : {
+                trigger: 'axis',
+                textStyle: {
+                    color: '#FFFFFF',
+                    fontSize: 25,
+                    fontWeight: 'bold'
+                }
+            },
+            legend:{
+                
+                x :'right',
+                y :'top',
+                
+                itemGap:20,
+                selectedMode:false,
+                
+                data:[{
+                      name:'发电负荷',
+                      textStyle:{
+                      fontSize:30,
+                      fontWeight:'bold',
+                      color:'red',
+                      }},
+                      {
+                      name:'供汽流量',
+                      
+                      textStyle:{
+                      fontSize:30,
+                      fontWeight:'bold',
+                      color:'green'
+                      
+                      }}
+                      
+                      ]
+                      
+            },
+
+            calculable : false,
+            xAxis : [
+                     {
+                     type : 'category',
+                     boundaryGap : false,
+                     data : myXdatas,
+                     axisLabel : {
+                     show:true,
+                     textStyle: {
+                     color: '#9CBAD2',//时间数据变绿地点
+                     fontSize: 25,
+                     }
+                     },
+                     splitLine : {
+                     lineStyle : {
+                     color : '#266CB1'
+                     }
+                     },
+                     axisLine : {
+                     lineStyle : {
+                     color : '#266CB1',
+                     width : 2
+                     }
+                     },
+                     axisTick : {
+                     lineStyle : {
+                     color : '#266CB1',
+                     width : 1
+                     }
+                     }
+                     }
+                     ],
+                     grid:{
+                         x:50,
+                         y:20,
+                         x2 : 10,
+                         y2 : 10,
+                         width:'93%',
+                         height:'88%',
+                         borderColor:'#266CB1'
+                     },
+                     yAxis : [
+                              {
+                              type : 'value',
+                              axisLabel : {
+                              formatter: '{value}',
+                              textStyle: {
+                              color:'#9CBAD2',
+                              fontSize:20,
+                              }
+                              },
+                              splitLine : {
+                              lineStyle : {
+                              color : '#266CB1'
+                              }
+                              },
+                              axisLine : {
+                              lineStyle : {
+                              color : '#266CB1',
+                              width : 2
+                              }
+                              },
+                              axisTick : {
+                              lineStyle : {
+                              color : '#266CB1',
+                              width : 1
+                              }
+                              }
+                              }
+                              ],
+                              series : [
+                                        {
+                                        name:'发电负荷',
+                                        type:'line',
+                                            smooth:false,
+                                        data:newAddDatas,
+                                        color:'#FF0000',
+                                        itemStyle : {
+                                        normal : {
+                                        lineStyle : {
+                                        color : '#FF0000',//线变绿地点。
+                                        //width : 1,
+                                        }
+                                        }
+                                        }
+                                        }　,
+                                        
+                                        
+                                        {
+                                        name:'供汽流量',
+                                        type:'line',
+                                        data:newAddDatas1,
+                                        itemStyle : {
+                                        normal : {
+                                        lineStyle : {
+                                        color : '#00FF00',//线变绿地点。
+                                        //width : 1,
+                                        }
+                                        }
+                                        }
+                                        
+                                        
+                                        
+                                        }
+                                        
+                                        
+                                        ]
+        };
+        // 图表清空
+        myChart.clear();
+        myChart.setOption(option);
+        //
+        //        var timeTicket = setInterval(function (){
+        //            addData(15);
+        //        },30);
+    }
+    
+    function addData(addDatas){
+        /*if (isFirstInit == false){
+            isFirstInit = true;*/
+            
+            initChart(addDatas);
+            
+        /*} else {
+            myChart.addData([
+                             [
+                              0,        // 系列索引
+                              firstData, // 新增数据
+                              false,    // 新增数据是否从队列头部插入
+                              true    // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+                              ],
+                             [
+                              1,        // 系列索引
+                              seconData, // 新增数据
+                              false,    // 新增数据是否从队列头部插入
+                              true    // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+                              ]                             ]);
+        }*/
+    
+        }
+    </script>
+</html>

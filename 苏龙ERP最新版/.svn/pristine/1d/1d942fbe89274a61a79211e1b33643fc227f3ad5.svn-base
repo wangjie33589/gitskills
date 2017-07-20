@@ -1,0 +1,134 @@
+//
+//  reworkVC.m
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import "reworkVC.h"
+#import "detilModel.h"
+
+@interface reworkVC ()
+
+@end
+
+@implementation reworkVC
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+  
+//    self.view.backgroundColor=[UIColor yellowColor];
+    [self configView];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(id)initWithDataSourse:(NSMutableArray *)arr{
+    
+    
+    self =[super init];
+    if (self) {
+        //        self.detilmodel=model;
+        //        NSLog(@"model==%@",model);
+        self.dataARR =arr;
+        // NSLog(@"___DATA===%@",self.dataARR);
+        
+        
+        
+    }
+    
+    return self;
+}
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    _myView.frame=CGRectMake(0,200, self.view.frame.size.width, 50);
+
+
+
+
+    return YES;
+
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    //注册通知,监听键盘出现
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(handleKeyboardDidShow:)
+                                                name:UIKeyboardDidShowNotification
+                                              object:nil];
+    //注册通知，监听键盘消失事件
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(handleKeyboardDidHidden)
+                                                name:UIKeyboardDidHideNotification
+                                              object:nil];
+    
+    
+    
+    [super viewWillAppear:YES];
+}
+
+//监听事件SA
+- (void)handleKeyboardDidShow:(NSNotification*)paramNotification
+{
+    //获取键盘高度
+    NSValue *keyboardRectAsObject=[[paramNotification userInfo]objectForKey:UIKeyboardFrameEndUserInfoKey];
+    
+    CGRect keyboardRect;
+    [keyboardRectAsObject getValue:&keyboardRect];
+    if ([_fanGongTextField isEditing]) {
+        _myView.frame=CGRectMake(0,self.view.bounds.size.height-keyboardRect.size.height, self.view.frame.size.width, 50);
+    }
+    else{
+        _contentView.contentInset=UIEdgeInsetsMake(0, 0,keyboardRect.size.height-180, 0);
+    
+    }    }
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    
+    
+    [self.view endEditing:YES];
+    
+}- (void)handleKeyboardDidHidden
+{
+    _contentView.contentInset=UIEdgeInsetsZero;
+    _myView.frame=CGRectMake(0,491, self.view.frame.size.width, 50);
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+
+
+-(void)configView{
+    
+    detilModel *model =self.dataARR[0];
+    _firstLab.text=[NSString stringWithFormat:@"任务名称：%@",model.title];
+    _seconrLab.text=[NSString stringWithFormat:@"分配人：%@  %@",model.mangerName,model.mangeTime];
+    _ThirdLab.text=[NSString stringWithFormat:@"计划时间：%@",model.FPetime];
+    
+    _contentView.text= model.Fcontent;
+    
+    
+    
+    
+    
+    
+}
+
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

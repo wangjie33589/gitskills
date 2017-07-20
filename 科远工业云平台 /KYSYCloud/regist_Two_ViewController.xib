@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="regist_Two_ViewController">
+            <connections>
+                <outlet property="DownSecondBtn" destination="K7n-2T-2qn" id="920-Lb-7T5"/>
+                <outlet property="downFirstBtn" destination="2Y1-in-JOb" id="rLc-69-Qr2"/>
+                <outlet property="downThirldBtn" destination="0l3-7D-gao" id="W62-V7-eTc"/>
+                <outlet property="mytable" destination="9Nj-aC-bSh" id="U2U-gh-yt7"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0l3-7D-gao">
+                    <rect key="frame" x="210" y="440" width="100" height="40"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.13495976940000001" green="0.49719063209999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="p9B-hr-bqv"/>
+                        <constraint firstAttribute="width" constant="100" id="zkG-HQ-HPg"/>
+                    </constraints>
+                    <state key="normal" title="提交报修单">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="confirm:" destination="-1" eventType="touchUpInside" id="5mp-aW-kqp"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K7n-2T-2qn">
+                    <rect key="frame" x="118" y="440" width="84" height="40"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.13495976940000001" green="0.49719063209999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="dXJ-c1-IqN"/>
+                    </constraints>
+                    <state key="normal" title="删除">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="delele:" destination="-1" eventType="touchUpInside" id="fi3-CS-PWm"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Y1-in-JOb">
+                    <rect key="frame" x="10" y="440" width="100" height="40"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.13495976940000001" green="0.49719063209999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="2g8-zm-hBQ"/>
+                        <constraint firstAttribute="width" constant="100" id="KJ3-Rz-bnd"/>
+                    </constraints>
+                    <state key="normal" title="保存报修单">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="keewping:" destination="-1" eventType="touchUpInside" id="7CX-eF-epx"/>
+                    </connections>
+                </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9Nj-aC-bSh">
+                    <rect key="frame" x="0.0" y="64" width="320" height="375"/>
+                    <animations/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="40"/>
+                </tableView>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="2Y1-in-JOb" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="CML-pE-a1w"/>
+                <constraint firstAttribute="trailing" secondItem="0l3-7D-gao" secondAttribute="trailing" constant="10" id="Dqk-PB-MvO"/>
+                <constraint firstAttribute="trailing" secondItem="9Nj-aC-bSh" secondAttribute="trailing" id="Ne7-CX-rb8"/>
+                <constraint firstItem="2Y1-in-JOb" firstAttribute="top" secondItem="9Nj-aC-bSh" secondAttribute="bottom" constant="1" id="W9q-og-2nS"/>
+                <constraint firstAttribute="bottom" secondItem="2Y1-in-JOb" secondAttribute="bottom" id="ZEc-pf-J3S"/>
+                <constraint firstItem="0l3-7D-gao" firstAttribute="leading" secondItem="K7n-2T-2qn" secondAttribute="trailing" constant="8" id="bqn-tl-P26"/>
+                <constraint firstItem="9Nj-aC-bSh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="64" id="lvx-9E-lCU"/>
+                <constraint firstItem="9Nj-aC-bSh" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="oTu-DP-BjR"/>
+                <constraint firstItem="K7n-2T-2qn" firstAttribute="leading" secondItem="2Y1-in-JOb" secondAttribute="trailing" constant="8" id="q80-m3-Zqq"/>
+                <constraint firstAttribute="bottom" secondItem="K7n-2T-2qn" secondAttribute="bottom" id="sEr-90-0ZK"/>
+                <constraint firstAttribute="bottom" secondItem="0l3-7D-gao" secondAttribute="bottom" id="vZa-ey-6fq"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="57" y="-17"/>
+        </view>
+    </objects>
+</document>

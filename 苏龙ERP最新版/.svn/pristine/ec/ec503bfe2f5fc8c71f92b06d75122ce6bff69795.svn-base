@@ -1,0 +1,41 @@
+//
+//  DetilVC.h
+//  ios版本科远APP
+//
+//  Created by sciyonSoft on 15/11/30.
+//  Copyright © 2015年 sciyonSoft. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "detilModel.h"
+
+
+@interface DetilVC : UIViewController<UIScrollViewDelegate>{
+
+
+    
+    UISegmentedControl *_segControl;
+    UIScrollView *_scrollView;
+    detilModel *_model;
+    
+
+}
+@property (weak, nonatomic) IBOutlet UIButton *commitBtn;
+@property (weak, nonatomic) IBOutlet UIButton *redworkBtn;
+
+@property (weak, nonatomic) IBOutlet UIButton *confirmBtn;
+
+- (IBAction)reworkBtn:(id)sender;
+- (IBAction)confirmBtn:(id)sender;
+
+- (IBAction)commitBtncick:(UIButton *)sender;
+
+@property (weak, nonatomic) IBOutlet UIImageView *imgView;
+@property (weak, nonatomic) IBOutlet UILabel *topLabel;
+
+@property(copy,nonatomic)NSString* FGUID;
+@property(retain,nonatomic)NSMutableArray *darray;
+
+
+
+@end

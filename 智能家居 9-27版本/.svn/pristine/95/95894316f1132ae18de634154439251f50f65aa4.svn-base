@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="modify_roleViewController">
+            <connections>
+                <outlet property="headerImg" destination="oLc-s6-r4u" id="WG9-2Y-Y3D"/>
+                <outlet property="rolename1" destination="wGv-vL-HLG" id="rb5-lM-2LD"/>
+                <outlet property="view" destination="9fV-9j-umo" id="E2i-0u-q2A"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="9fV-9j-umo">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oLc-s6-r4u">
+                    <rect key="frame" x="20" y="20" width="70" height="70"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="UeG-df-AGi"/>
+                        <constraint firstAttribute="width" constant="70" id="nAC-9E-TKd"/>
+                    </constraints>
+                    <state key="normal" backgroundImage="10-1-角色管理-_03.png"/>
+                    <connections>
+                        <action selector="headerImg:" destination="-1" eventType="touchUpInside" id="zD8-Qm-xTd"/>
+                    </connections>
+                </button>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dmz-Za-5Kp">
+                    <rect key="frame" x="87" y="81" width="190" height="1"/>
+                    <animations/>
+                    <color key="backgroundColor" red="0.0078431372549019607" green="0.72941176470588232" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="G07-ZJ-Zh8"/>
+                    </constraints>
+                </view>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="角色名：" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wGv-vL-HLG">
+                    <rect key="frame" x="98" y="53" width="190" height="30"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="CR2-XG-wdi"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="wGv-vL-HLG" firstAttribute="leading" secondItem="oLc-s6-r4u" secondAttribute="trailing" constant="8" id="0tg-WK-xje"/>
+                <constraint firstItem="oLc-s6-r4u" firstAttribute="top" secondItem="9fV-9j-umo" secondAttribute="top" constant="30" id="38t-0p-tDp"/>
+                <constraint firstItem="Dmz-Za-5Kp" firstAttribute="width" secondItem="wGv-vL-HLG" secondAttribute="width" id="4lL-mk-BL9"/>
+                <constraint firstItem="wGv-vL-HLG" firstAttribute="top" secondItem="9fV-9j-umo" secondAttribute="top" constant="53" id="62c-Gu-rTb"/>
+                <constraint firstItem="oLc-s6-r4u" firstAttribute="leading" secondItem="9fV-9j-umo" secondAttribute="leading" constant="20" id="8Aw-Jz-8a6"/>
+                <constraint firstItem="oLc-s6-r4u" firstAttribute="leading" secondItem="9fV-9j-umo" secondAttribute="leading" constant="30" id="CHs-rS-mKY"/>
+                <constraint firstItem="Dmz-Za-5Kp" firstAttribute="leading" secondItem="9fV-9j-umo" secondAttribute="leading" constant="87" id="JfT-k7-58k"/>
+                <constraint firstAttribute="trailing" secondItem="wGv-vL-HLG" secondAttribute="trailing" constant="32" id="gz1-vT-9n0"/>
+                <constraint firstItem="Dmz-Za-5Kp" firstAttribute="bottom" secondItem="wGv-vL-HLG" secondAttribute="bottom" constant="-1" id="iXM-Un-8DR"/>
+                <constraint firstItem="oLc-s6-r4u" firstAttribute="top" secondItem="9fV-9j-umo" secondAttribute="top" constant="20" id="ldc-tg-3eO"/>
+            </constraints>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="38t-0p-tDp"/>
+                    <exclude reference="CHs-rS-mKY"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+    <resources>
+        <image name="10-1-角色管理-_03.png" width="137" height="138"/>
+    </resources>
+</document>

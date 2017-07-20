@@ -1,0 +1,156 @@
+//
+//  InformationViewController.m
+//  Proxy_ios
+//
+//  Created by 刘康.Mac on 15/12/5.
+//  Copyright © 2015年 keyuan. All rights reserved.
+//
+
+#import "InformationViewController.h"
+#import "TopView.h"
+#import "InfoTableViewCell.h"
+
+@interface InformationViewController () <TopViewDelegate,UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>
+{
+    UIScrollView* totalScrollView;
+    NSString* urlStr;
+    NSDictionary* dictUrl;
+    NSMutableArray* showArray;
+    UITableView* tableViewList;
+}
+@end
+
+@implementation InformationViewController
+- (id)initWithUrl:(NSString *)htmlUrl list:(NSDictionary *)urlDict
+{
+    self = [super init];
+    if (self) {
+        dictUrl = urlDict;
+        urlStr = htmlUrl;
+    }
+    return self;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"流程信息";
+    TopView* vc = [[TopView alloc] initWithFrame:CGRectMake(0, 0, LWidth, 40)];
+    vc.array = @[@"流程信息",@"流程图"];
+    vc.delegate = self;
+    vc.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:vc];
+
+    totalScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 40, LWidth, LHeight-104)];//总scrollView
+    totalScrollView.backgroundColor = [UIColor whiteColor];
+    totalScrollView.pagingEnabled = YES;
+    totalScrollView.delegate = self;
+    totalScrollView.contentSize = CGSizeMake(LWidth*2, LHeight-104);
+    [self.view addSubview:totalScrollView];
+    
+    tableViewList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, LWidth, totalScrollView.frame.size.height)];
+    tableViewList.delegate = self;
+    tableViewList.dataSource = self;
+    tableViewList.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [tableViewList setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [totalScrollView addSubview:tableViewList];
+    
+    UIWebView* webView = [[UIWebView alloc] initWithFrame:CGRectMake(LWidth, 0, LWidth, totalScrollView.frame.size.height)];
+    webView.scalesPageToFit = YES;
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlStr]]];
+    [totalScrollView addSubview:webView];
+    
+    [self requestShowDataList];
+}
+- (void)requestShowDataList
+{
+    [SVProgressHUD showWithStatus:@"努力加载中..."];
+    MyRequest *manager = [MyRequest requestWithURL:[NSString stringWithFormat:@"http://%@%@/%@",HTTPIP,SLRD,MOBILE_URL] withParameter:dictUrl];
+    manager.backSuccess = ^void(NSDictionary *dictt)
+    {
+        [showArray removeAllObjects];
+        showArray = [[NSMutableArray alloc] init];
+        
+        if ([[dictt objectForKey:@"success"] integerValue] == 1) {
+            if ([[dictt allKeys]containsObject:@"Data"]) {
+                if ((NSObject*)[dictt objectForKey:@"Data"]!=[NSNull null] ) {
+                       if ([[dictt objectForKey:@"Data"] objectForKey:@"WF_OPINION"] != nil || ![[[dictt objectForKey:@"Data"] objectForKey:@"WF_OPINION"] isEqual:[NSNull null]]) {
+                                  if ([[[dictt objectForKey:@"Data"] objectForKey:@"WF_OPINION"] isKindOfClass:[NSDictionary class]]) {
+                                  [showArray addObject:[[dictt objectForKey:@"Data"] objectForKey:@"WF_OPINION"]];
+                           }else{
+                                    showArray = [[dictt objectForKey:@"Data"] objectForKey:@"WF_OPINION"];
+                            }
+                            [tableViewList reloadData];
+                           }
+                    }
+               }
+        }else{
+            [SVProgressHUD showErrorWithStatus:[dictt objectForKey:@"errorMsg"]];
+        }
+
+        [SVProgressHUD dismiss];
+    };
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return showArray.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellStr = @"CellIdentifier";
+    InfoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellStr];
+    if(cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"InfoTableViewCell" owner:nil options:nil];
+        for (id oneObject in nib)
+        {
+            if ([oneObject isKindOfClass:[InfoTableViewCell class]])
+            {
+                cell = (InfoTableViewCell *)oneObject;
+            }
+        }
+    }
+    cell.lab1.text = [showArray[indexPath.row] objectForKey:@"PROCESSNAME"];
+    cell.lab2.text = [showArray[indexPath.row] objectForKey:@"CREATENAME"];
+    cell.lab3.text = [[[showArray[indexPath.row] objectForKey:@"CREATETIME"] stringByReplacingOccurrencesOfString:@"T" withString:@" "] stringByReplacingOccurrencesOfString:@"+08:00" withString:@""];
+    cell.lab4.text = [showArray[indexPath.row] objectForKey:@"CONTENT"];
+    cell.lab5.text = [NSString stringWithFormat:@"                 %@",[showArray[indexPath.row] objectForKey:@"DESCRIPTION"]];
+    CGSize size = [self sizeWithString:[NSString stringWithFormat:@"流转描述：%@",[showArray[indexPath.row] objectForKey:@"DESCRIPTION"]] font:cell.lab5.font];
+    cell.lab5.frame = CGRectMake(cell.lab5.frame.origin.x, 121, cell.lab5.frame.size.width, size.height);
+    tableView.rowHeight = 165;
+    return cell;
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    NSDictionary *dict =[[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%ld",(unsigned long)(scrollView.contentOffset.x / scrollView.frame.size.width)],@"indexpage", nil];
+    NSNotification *notification =[NSNotification notificationWithName:@"tongzhi" object:nil userInfo:dict];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+}
+- (CGSize)sizeWithString:(NSString *)string font:(UIFont *)font
+{
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(LWidth, 36)//限制最大的宽度和高度
+                                       options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading  | NSStringDrawingUsesLineFragmentOrigin//采用换行模式
+                                    attributes:@{NSFontAttributeName: font}
+                                       context:nil];
+    return rect.size;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    
+    [[App ddMenu] setEnableGesture:NO];
+}
+- (void)pushNewsViewController:(NSInteger)page
+{
+    [totalScrollView setContentOffset:CGPointMake(LWidth*page, 0) animated:YES];
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end
